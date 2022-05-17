@@ -1,44 +1,21 @@
-<script>
-  $(function() {
-    $("#select_all").click(function() {
-      if (this.checked) {
-        $("input[type=checkbox]").each(function() {
-          this.checked = true;
-        });
-      } else {
-        $("input[type=checkbox]").each(function() {
-          this.checked = false;
-        });
-      }
-    });
-    $("#enroll_form").submit(function(e) {
-      e.preventDefault();
-      const enrolled_sect = [];
-      $("input.enroll").each(function() {
-        if (this.checked == true) {
-          enrolled_sect.push($(this).val());
-        }
-      });
-      grouped_sect = group_num(enrolled_sect);
-      if (enrolled_sect.length == 0) {
-        alert("กรุณาเลือกตอนเรียนอย่างน้อย 1 ตอนเรียน");
-      } else if (confirm("ยืนยันการลงทะเบียนรายวิชา\n" + $("#course_info").text() + "\nตอนเรียน\n" + grouped_sect)) {
-        alert("SEND DATA TO THE SERVER");
-        $("#course_result").empty();
-        $("#search").val("");
-      }
-    });
-  });
-</script>
 <?php
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $id = mysqli_real_escape_string($link, $_GET["course_id"]);
-  $stmt = $link->prepare("SELECT * FROM course, section, slot WHERE course.course_id = ? AND course.course_id = section.course_id AND section.course_id = slot.course_id AND section.sect_num = slot.sect_num ORDER BY section.sect_num, slot_id");
+  $stmt = $link->prepare("SELECT *
+                          FROM course, section, slot
+                          WHERE course.course_id = ?
+                          AND course.course_id = section.course_id
+                          AND section.course_id = slot.course_id
+                          AND section.sect_num = slot.sect_num
+                          ORDER BY section.sect_num, slot_id");
   $stmt->bind_param("s", $id);
   $stmt->execute();
   $result = $stmt->get_result();
   if (mysqli_num_rows($result) == 0) {
-    $stmt = $link->prepare("SELECT * FROM group_course, course WHERE group_course_id = ? AND group_course.course_id = course.course_id");
+    $stmt = $link->prepare("SELECT *
+                            FROM group_course, course
+                            WHERE group_course_id = ?
+                            AND group_course.course_id = course.course_id");
     $stmt->bind_param("s", $id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -47,6 +24,7 @@
     }
     echo "<form id=gr_enroll_form>";
     echo "<table style=border-collapse:collapse class=center>";
+    echo "<td>&nbsp</td>";
     echo "<tr>";
     echo "<th>ลำดับที่</th>";
     echo "<th>รหัสรายวิชา</th>";
@@ -65,15 +43,14 @@
       echo "<td>$cur_num</td>";
       echo "<td>$row[course_id]</td>";
       echo "<td>$row[course_en_name]</td>";
-      echo "<td>$row[section]</td>";
+      echo "<td class=gr_sect>$row[section]</td>";
       echo "<td>$row[credit]</td>";
       echo "</tr>";
       $total_credit += $row["credit"];
       $cur_num++;
     }
-    echo "<p style=text-align:center;>$total_credit&nbspหน่วยกิต</p>";
+    echo "<p style=text-align:center;>[$total_credit&nbspหน่วยกิต]</p>";
     echo "<p style=text-align:center;><input type=submit value=ลงทะเบียนรายวิชา></p>";
-
     echo "</form>";
   } else {
     echo "<form id=enroll_form>";
@@ -102,13 +79,21 @@
     }
     while ($row = mysqli_fetch_array($result)) {
       if ($cur_sect == "") {
-        echo "<p id=course_info style=text-align:center;>$row[course_id]&nbsp&nbsp$row[course_short_name]</p>";
-        echo "<p style=text-align:center;>$row[course_th_name]</p>";
-        echo "<p style=text-align:center;>$row[course_en_name]</p>";
-        echo "<p style=text-align:center;>$row[credit]&nbspหน่วยกิต</p>";
+        echo "<p id=course_info style=text-align:center;>$row[course_id]&nbsp&nbsp$row[course_en_name]</p>";
+        echo "<p style=text-align:center;>$row[course_th_name]&nbsp&nbsp[$row[credit]&nbspหน่วยกิต]</p>";
         echo "<p style=text-align:center;><input type=submit value=ลงทะเบียนรายวิชา></p>";
         if (in_array($row["course_en_name"], ["THESIS", "DISSERTATION"])) {
-          echo "<p style=text-align:center;><label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp<input type=text id=credit placeholder=หน่วยกิต size=10 style=text-align:center;></p>";
+          echo "<p style=text-align:center;><label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp
+            <input
+              type=number
+              step=0.5
+              min=0.5
+              max=$row[credit]
+              id=credit
+              placeholder=หน่วยกิต
+              size=10
+              style=text-align:center;>
+          </p>";
         }
       }
       $sect_num = $row["sect_num"];
