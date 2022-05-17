@@ -8,10 +8,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>กรอกรหัสลงทะเบียนเรียน</title>
 		<style>
-			input, h1, form, #result, .student_info {text-align: center;}
+			input, h1, form, #result, .student_info, p {text-align: center;}
 			#result {color: red;}
 			p {
-				text-align: center;
 				margin-bottom: 5px;
 				margin-top: 5px;
 			}
@@ -19,11 +18,15 @@
                 h1 {font-size: 20px;}
 				p, div {font-size: 13px;}
 				p {text-align: left;}
+				.logout-container {text-align: center;}
             }
 		</style>
 		<script src="jquery-3.6.0.min.js"></script>
 		<script>
 			$(function() {
+				$("#logout").click(function() {
+					window.location.replace("logout.php");
+				});
 				$("#registration_code_form").submit(function(e) {
 					e.preventDefault();
 					$.post("registration_code_check.php", {registration_code: $("#registration_code").val()}, function(data) {
@@ -59,5 +62,7 @@
 				<input type="text" id="registration_code" placeholder="รหัสลงทะเบียนเรียน">
 				<input type="submit" value="ยืนยัน">
 		</form>
+		<br>
+		<p class="logout-container"><input type="button" id="logout" value="ออกจากระบบ"></p>
 	</body>
 </html>

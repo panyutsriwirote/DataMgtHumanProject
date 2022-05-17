@@ -2,6 +2,9 @@
   session_start();
   session_unset();
   session_destroy();
-  header('Location: '."index.html");
-  exit();
 ?>
+<title>ออกจากระบบ</title>
+<script>
+  alert("ออกจากระบบสำเร็จ");
+  window.location.replace("index.html");
+</script>
