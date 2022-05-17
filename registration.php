@@ -35,7 +35,7 @@
             }
             #course_result {
                 border: 1px solid black;
-                height: 50vh;
+                height: 49vh;
                 overflow-y: scroll;
                 overflow-x: scroll;
             }
@@ -133,6 +133,9 @@
                 }
             }
             $(function() {
+                $("#logout").click(function() {
+                    window.location.replace("logout.php");
+                });
                 let submitted = false, prev_term = "";
                 $("#search").on("input", function() {
                     submitted = false;
@@ -257,7 +260,10 @@
         <div class="header">
             <div id="time"></div>
             <?php
-                echo "<div id=student_info>$_SESSION[student_name]<br>$_SESSION[student_id]</div>";
+                echo "<div id=student_info>$_SESSION[student_name]<br>
+                    $_SESSION[student_id]<br>
+                    <input type=button id=logout value=ออกจากระบบ>
+                </div>";
             ?>
         </div>
         <p><b>รายวิชาที่ลงทะเบียนแล้ว</b></p>

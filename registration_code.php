@@ -8,10 +8,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>กรอกรหัสลงทะเบียนเรียน</title>
 		<style>
-			input, h1, form, #result {text-align: center;}
-			.student_info {display: flex;}
-			#student_id {margin-left: auto;}
+			input, h1, form, #result, .student_info {text-align: center;}
 			#result {color: red;}
+			p {
+				text-align: center;
+				margin-bottom: 5px;
+				margin-top: 5px;
+			}
+			@media only screen and (max-width: 600px) {
+                h1 {font-size: 20px;}
+				p, div {font-size: 13px;}
+				p {text-align: left;}
+            }
 		</style>
 		<script src="jquery-3.6.0.min.js"></script>
 		<script>
@@ -32,11 +40,9 @@
 	<body>
 		<?php
 			echo "<h1>สำนักงานลงทะเบียนจุฬาลงกรณ์มหาวิทยาลัย<br>ภาคการศึกษา$_SESSION[semester] ปีการศึกษา $_SESSION[academic_year]</h1>";
-			echo "<div class=student_info>";
-				echo "<div>$_SESSION[student_faculty]</div>";
-				echo "<div id=student_id>$_SESSION[student_id]</div>";
-			echo "</div>";
-			echo "<p>$_SESSION[student_name]</p>";
+			echo "<p class=student_info>$_SESSION[student_faculty]</p>";
+			echo "<p class=student_info>$_SESSION[student_id]</p>";
+			echo "<p class=student_info>$_SESSION[student_name]</p>";
 		?>
 		<p>
 			การบันทึกรหัสการลงทะเบียนเรียนของนิสิตระดับปริญญาบัณฑิต<br>
