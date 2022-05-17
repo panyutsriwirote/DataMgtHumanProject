@@ -51,11 +51,10 @@
   });
 </script>
 <?php
-  $screen_mode = $_GET["screen_mode"];
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $stmt = $link->prepare("SELECT * FROM course, section, slot WHERE course.course_id = ? AND course.course_id = section.course_id AND section.course_id = slot.course_id AND section.sect_num = slot.sect_num ORDER BY section.sect_num, slot_id");
   $stmt->bind_param("s", $id);
-  $id = $_GET["course_id"];
+  $id = mysqli_real_escape_string($link, $_GET["course_id"]);
   $stmt->execute();
   $result = $stmt->get_result();
   if (mysqli_num_rows($result) == 0) {
@@ -68,19 +67,13 @@
   echo "<th>ลงทะเบียน</th>";
   echo "<th>จำนวนนิสิต</th>";
   echo "<th>ตอนเรียน</th>";
-  if ($screen_mode == "big") {
-    echo "<th>วิธีสอน</th>";
-  }
+  echo "<th>วิธีสอน</th>";
   echo "<th>วัน</th>";
   echo "<th>เวลาเรียน</th>";
-  if ($screen_mode == "big") {
-    echo "<th>อาคาร</th>";
-    echo "<th>ห้อง</th>";
-  }
+  echo "<th>อาคาร</th>";
+  echo "<th>ห้อง</th>";
   echo "<th>ผู้สอน</th>";
-  if ($screen_mode == "big") {
-    echo "<th>หมายเหตุ</th>";
-  }
+  echo "<th>หมายเหตุ</th>";
   echo "</tr>";
   function switch_class($class) {
     if ($class == "color1") {
@@ -124,20 +117,14 @@
       echo "<td></td>";
       echo "<td></td>";
     }
-    if ($screen_mode == "big") {
-      echo "<td valign=TOP>&nbsp$row[teach_method]&nbsp</td>";
-    }
+    echo "<td valign=TOP>&nbsp$row[teach_method]&nbsp</td>";
     echo "<td valign=TOP>&nbsp$row[day]&nbsp</td>";
     echo "<td valign=TOP>&nbsp$row[time]&nbsp</td>";
-    if ($screen_mode == "big") {
-      echo "<td valign=TOP>&nbsp$row[building]&nbsp</td>";
-      echo "<td valign=TOP>&nbsp$row[room]&nbsp</td>";
-    }
+    echo "<td valign=TOP>&nbsp$row[building]&nbsp</td>";
+    echo "<td valign=TOP>&nbsp$row[room]&nbsp</td>";
     echo "<td valign=TOP>&nbsp$row[teacher]&nbsp</td>";
     $note = str_replace("\n", "<br>", $row["note"]);
-    if ($screen_mode == "big") {
-      echo "<td valign=TOP>$note</td>";
-    }
+    echo "<td valign=TOP>$note</td>";
     echo "</tr>";
   }
   echo "</table>";

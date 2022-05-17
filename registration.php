@@ -114,10 +114,9 @@
                         response(data);
                     });
                 }});
-                const screen_mode = (screen.width < 600) ? "small" : "big";
                 $("#course_search").submit(function(e) {
                     e.preventDefault();
-                    $.get("course_result.php", {course_id: $("#search").val(), screen_mode: "big"}, function(data) {
+                    $.get("course_result.php", {course_id: $("#search").val()}, function(data) {
                         $("#course_result").html(data);
                     });
                 });
@@ -134,7 +133,7 @@
         <p><b>รายวิชาที่ลงทะเบียนแล้ว</b></p>
         <div id="enrolled_course">ยังไม่มีรายวิชาที่ลงทะเบียนเรียน</div>
         <p><b>ลงทะเบียนรายวิชาเพิ่มเติม</b></p>
-        <form method="post" id="course_search">
+        <form id="course_search">
             <input type="text" id="search" placeholder="ค้นหาด้วยชื่อวิชาหรือรหัสวิชา">
             <input type="submit" value="ค้นหา">
         </form>
