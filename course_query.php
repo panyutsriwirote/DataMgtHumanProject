@@ -1,4 +1,9 @@
 <?php
+  session_start();
+  if (!isset($_SESSION["login"])) {
+    header($_SERVER['SERVER_PROTOCOL']." 404 Not Found", true, 404);
+    exit();
+  }
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $mode = mysqli_real_escape_string($link, $_GET["mode"]);
   $term = mysqli_real_escape_string($link, $_GET["term"]);

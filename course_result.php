@@ -1,4 +1,9 @@
 <?php
+  session_start();
+  if (!isset($_SESSION["login"])) {
+    header($_SERVER['SERVER_PROTOCOL']." 404 Not Found", true, 404);
+    exit();
+  }
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $id = mysqli_real_escape_string($link, $_GET["course_id"]);
   $stmt = $link->prepare("SELECT *
