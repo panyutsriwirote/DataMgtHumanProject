@@ -58,7 +58,9 @@
   $id = $_GET["course_id"];
   $stmt->execute();
   $result = $stmt->get_result();
-  echo "<meta name=viewport content=width=device-width, initial-scale=1.0>";
+  if (mysqli_num_rows($result) == 0) {
+    exit("<h1>ไม่พบรายวิชา</h1>");
+  }
   echo "<form id=enroll_form>";
   echo "<table style=border-collapse:collapse class=center>";
   echo "<td><label for=select_all>เลือกทั้งหมด</label><br><input type=checkbox id=select_all></td>";
@@ -94,7 +96,11 @@
       echo "<p id=course_info style=text-align:center;>$row[course_id]&nbsp&nbsp$row[course_short_name]</p>";
       echo "<p style=text-align:center;>$row[course_th_name]</p>";
       echo "<p style=text-align:center;>$row[course_en_name]</p>";
+      echo "<p style=text-align:center;>$row[credit]&nbspหน่วยกิต</p>";
       echo "<p style=text-align:center;><input type=submit value=ลงทะเบียนรายวิชา></p>";
+      if (in_array($row["course_en_name"], ["THESIS", "DISSERTATION"])) {
+        echo "<p style=text-align:center;><label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp<input type=text id=credit placeholder=หน่วยกิต size=10 style=text-align:center;></p>";
+      }
     }
     $sect_num = $row["sect_num"];
     if ($cur_sect != $sect_num) {
