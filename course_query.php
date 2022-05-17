@@ -22,11 +22,13 @@
   while ($row = mysqli_fetch_array($result)) {
     array_push($return, array("value"=>$row["course_id"], "label"=>$row["course_id"]." ".$row["course_name"]));
   }
-  while ($row = mysqli_fetch_array($gr_result)) {
-    if (count($return) == 10) {
-      break;
+  if ($mode == "num") {
+    while ($row = mysqli_fetch_array($gr_result)) {
+      if (count($return) == 10) {
+        break;
+      }
+      array_push($return, array("value"=>$row["group_course_id"], "label"=>$row["group_course_id"]." รายวิชาแบบกลุ่ม"));
     }
-    array_push($return, array("value"=>$row["group_course_id"], "label"=>$row["group_course_id"]." รายวิชาแบบกลุ่ม"));
   }
   echo json_encode($return);
   mysqli_close($link);

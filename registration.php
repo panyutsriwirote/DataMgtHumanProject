@@ -90,6 +90,26 @@
                 }
                 $("#time").html(`${date}/${month}/${year}<br>เวลา ${hour}:${minute}:${second}`);
             }
+            function group_num(list) {
+                const grouped_num = [];
+                for (let i=0;i<list.length;i++) {
+                    const num = parseInt(list[i]);
+                    if (i>0 && list[i-1] == num-1) {
+                        grouped_num[grouped_num.length-1].push(num);
+                        continue;
+                    }
+                    grouped_num.push([num])
+                }
+                const num_range = [];
+                for (let group of grouped_num) {
+                    if (group.length == 1) {
+                        num_range.push(String(group[0]));
+                    } else {
+                        num_range.push(group[0] + "-" + group[group.length-1]);
+                    }
+                }
+                return num_range;
+            }
             $(function() {
                 const search_cache = {};
                 $("#search").autocomplete({select: function(e, ui) {$("#search").val(ui.item.value);$("#course_search").submit();},source: function(request, response) {
