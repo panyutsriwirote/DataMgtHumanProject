@@ -1,9 +1,5 @@
 <?php
     session_start();
-    $_SESSION["academic_year"] = "2564";
-    $_SESSION["semester"] = "ปลาย";
-    $_SESSION["student_name"] = "ปานญุตม์ ศรีวิโรจน์";
-    $_SESSION["student_id"] = "6340138322";
 ?>
 <!DOCTYPE html>
 <html lang="th">
