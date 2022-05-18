@@ -38,7 +38,7 @@
   $result = $stmt->get_result();
   $return = array();
   while ($row = mysqli_fetch_array($result)) {
-  array_push($return, $row["course_id"]." ".$row["course_name"]);
+    array_push($return, $row["course_id"]." ".$row["course_name"]);
   }
   if ($mode == "num") {
     while ($row = mysqli_fetch_array($gr_result)) {

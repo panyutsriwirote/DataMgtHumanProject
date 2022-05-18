@@ -6,18 +6,20 @@
 	}
 	$link = mysqli_connect("localhost", "root", "", "regchula_courses");
 	$query = "SELECT registration_code, login_status
-				FROM registration_code
+				FROM student_reg
 				WHERE std_id = '$_SESSION[student_id]'
-				AND year = '$_SESSION[academic_year]'
-				AND semester = $_SESSION[int_semester]
+				AND semester_id = $_SESSION[semester_id]
 				LIMIT 1";
 	$result = mysqli_query($link, $query);
 	while ($row = mysqli_fetch_array($result)) {
 		if ($row["login_status"] == 1) {
+			mysqli_close($link);
 			header("Location: registration.php");
 			exit();
 		} else {
 			$_SESSION["registration_code"] = $row["registration_code"];
+			mysqli_close($link);
+
 		}
 	}
 ?>

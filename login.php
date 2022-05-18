@@ -11,23 +11,41 @@
   $stmt->execute();
   $result = $stmt->get_result();
   if (mysqli_num_rows($result) == 0) {
-    echo "0";
+    mysqli_close($link);
     session_unset();
     session_destroy();
+    echo "0";
     exit();
   }
-  $password = mysqli_real_escape_string($link, $_POST["password"]);
+  $password = $_POST["password"];
   while ($row = mysqli_fetch_array($result)) {
     if ($password == $row["std_pass"]) {
+      $query = "SELECT * FROM semester ORDER BY semester_id DESC LIMIT 1";
+      $semester_result = mysqli_query($link, $query);
+      while ($row2 = mysqli_fetch_array($semester_result)) {
+        $_SESSION["academic_year"] = $row2["year"];
+        $int_semester = $row2["semester"];
+        $_SESSION["semester_id"] = $row2["semester_id"];
+        switch ($int_semester) {
+          case "1":
+            $_SESSION["semester"] = "ต้น";
+            break;
+          case "2":
+            $_SESSION["semester"] = "ปลาย";
+            break;
+          case "3":
+            $_SESSION["semester"] = "ฤดูร้อน";
+            break;
+        }
+      }
       $_SESSION["login"] = true;
-      $_SESSION["academic_year"] = "2565";
-      $_SESSION["semester"] = "ต้น";
-      $_SESSION["int_semester"] = 1;
       $_SESSION["student_name"] = $row["fname_th"]." ".$row["lname_th"];
       $_SESSION["student_id"] = $row["std_id"];
       $_SESSION["student_faculty"] = $row["faculty_th_name"];
+      mysqli_close($link);
       echo "1";
     } else {
+      mysqli_close($link);
       session_unset();
       session_destroy();
       echo "0";

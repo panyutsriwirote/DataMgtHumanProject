@@ -4,37 +4,29 @@
 		header($_SERVER['SERVER_PROTOCOL']." 404 Not Found", true, 404);
 		exit();
 	}
-	$student_id = $_SESSION["student_id"];
-	$academic_year = $_SESSION["academic_year"];
-	$semester = $_SESSION["semester"];
-	// $link = mysqli_connect("localhost", "root", "", "regchula_courses");
-	// $stmt = $link->prepare("");
-	// $stmt->bind_param("s", $id);
-	// $stmt->execute();
-	// $result = $stmt->get_result();
-	$result = [
-		["0123101", "PARAGRAPH WRITINGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "2-10,12-20", "3"],
-		["0123101", "PARAGRAPH WRITINGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "2-10,12-20", "3"],
-		["0123101", "PARAGRAPH WRITINGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "2-10,12-20", "3"],
-		["0123101", "PARAGRAPH WRITINGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "2-10,12-20", "3"],
-		["0123101", "PARAGRAPH WRITINGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "2-10,12-20", "3"],
-		["0123101", "PARAGRAPH WRITINGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "2-10,12-20", "3"],
-		["0123101", "PARAGRAPH WRITINGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "2-10,12-20", "3"],
-		["0123101", "PARAGRAPH WRITINGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "2-10,12-20", "3"],
-		["0123101", "PARAGRAPH WRITINGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", "2-10,12-20", "3"],
-		["2228202", "ARABIC IV", "1-2", "3"]
-	];
-	// $result = [];
-	if ($result == []) {
-		echo "<table><td>ยังไม่มีรายวิชาที่ลงทะเบียนเรียน</td></table>";
+	$link = mysqli_connect("localhost", "root", "", "regchula_courses");
+	$query = "SELECT registration.course_id, course_en_name, GROUP_CONCAT(sect_num) AS section, credit
+				FROM registration, student_reg, course
+				WHERE registration.std_id = student_reg.std_id
+				AND registration.semester_id = student_reg.semester_id
+				AND registration.course_id = course.course_id
+				AND registration.std_id = '$_SESSION[student_id]'
+				AND registration.semester_id = $_SESSION[semester_id]
+				GROUP BY registration.course_id
+				UNION
+				SELECT registration_t.course_id, course_en_name, GROUP_CONCAT(sect_num) AS section, selected_credit AS credit
+				FROM registration_t, student_reg, course
+				WHERE registration_t.std_id = student_reg.std_id
+				AND registration_t.semester_id = student_reg.semester_id
+				AND registration_t.course_id = course.course_id
+				AND registration_t.std_id = '$_SESSION[student_id]'
+				AND registration_t.semester_id = $_SESSION[semester_id]
+				GROUP BY registration_t.course_id";
+	$result = mysqli_query($link, $query);
+	if (mysqli_num_rows($result) == 0) {
+		mysqli_close($link);
+		echo "<table><td><h1>ยังไม่มีรายวิชาที่ลงทะเบียนเรียน</h1></td></table>";
 		exit();
-	}
-	function switch_class($class) {
-		if ($class == "color1") {
-		  return "color2";
-		} else {
-		  return "color1";
-		}
 	}
 	echo "<table class=enrolled_course>";
 	echo "<tr>";
@@ -46,13 +38,44 @@
 	echo "</tr>";
 	$num = 1;
 	$class = "color2";
-	foreach ($result as $course) {
+	function switch_class($class) {
+		if ($class == "color1") {
+		  return "color2";
+		} else {
+		  return "color1";
+		}
+	}
+	function group_num($string) {
+		$arr = explode(",", $string);
+		$grouped_num = array();
+		for ($i = 0; $i < count($arr); $i++) {
+			$num = intval($arr[$i]);
+			if ($i > 0 && $arr[$i-1] == $num-1) {
+				array_push($grouped_num[count($grouped_num)-1], $num);
+				continue;
+			}
+			array_push($grouped_num, [$num]);
+		}
+		$num_range = array();
+		foreach ($grouped_num as $group) {
+			if (count($group) == 1) {
+				array_push($num_range, $group[0]);
+			} else {
+				$begin = $group[0];
+				$end = end($group);
+				array_push($num_range, "$begin-$end");
+			}
+		}
+		return $num_range;
+	}
+	while ($row = mysqli_fetch_array($result)) {
 		echo "<tr class=$class>";
 		echo "<td>$num</td>";
-		echo "<td class=course_id>$course[0]</td>";
-		echo "<td>$course[1]</td>";
-		echo "<td>$course[2]</td>";
-		echo "<td>$course[3]</td>";
+		echo "<td class=course_id>$row[course_id]</td>";
+		echo "<td class=course_name>$row[course_en_name]</td>";
+		$grouped_sect = join(",", group_num($row["section"]));
+		echo "<td>$grouped_sect</td>";
+		echo "<td>$row[credit]</td>";
 		echo "<td><input type=button class=edit value=แก้ไข></td>";
 		echo "<td><input type=button class=delete value=ลบ></td>";
 		echo "</tr>";
@@ -60,4 +83,5 @@
 		$class = switch_class($class);
 	}
 	echo "</table>";
+	mysqli_close($link);
 ?>

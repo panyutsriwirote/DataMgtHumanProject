@@ -227,6 +227,13 @@
                         $("#select_all").prop("checked", false);
                     }
                 });
+                const enrolled_sect_dom = $("#already_enrolled_sect");
+                const already_enrolled_sect = (enrolled_sect_dom.length) ? enrolled_sect_dom.html().split(",") : [];
+                $(".enroll").each(function() {
+                    if (already_enrolled_sect.includes($(this).val())) {
+                        this.checked = true;
+                    }
+                });
                 $("#enroll_form").submit(function(e) {
                     e.preventDefault();
                     const enrolled_sect = [];
@@ -249,9 +256,7 @@
                         }
                         if (confirm(msg)) {
                             const course_id = course_info.substr(0, 7);
-                            alert("SEND DATA TO THE SERVER " + course_id);
                             $.post("enroll.php", {course_id: course_id, enrolled_sect: enrolled_sect, credit: credit}, function(data) {
-                                alert(data);
                                 $("#course_result").empty();
                                 $("#search").val("");
                                 submitted = false;
@@ -264,11 +269,8 @@
                     e.preventDefault();
                     const course_info = $("#course_info").text();
                     if (confirm("ยืนยันการลงทะเบียนรายวิชา\n" + course_info)) {
-                        alert("SEND DATA TO THE SERVER");
                         const course_id = course_info.substr(0, 7);
-                        alert(course_id);
-                        $.post("enroll.php", {course_id: course_id, enrolled_sect: "group", credit: null}, function(data) {
-                            alert(data);
+                        $.post("enroll.php", {course_id: course_id, enrolled_sect: "group", credit: null}, function() {
                             $("#course_result").empty();
                             $("#search").val("");
                             submitted = false;
@@ -280,7 +282,6 @@
             $(document).on("enrolled_course_loaded", function() {
                 $(".edit").click(function() {
                     const course_id = $(this).parent().siblings(".course_id").html();
-                    alert("edit " + course_id);
                     $.get("course_result.php", {course_id: course_id}, function(data) {
                         $("#course_result").html(data);
                         $(document).trigger("form_loaded");
@@ -288,10 +289,12 @@
                 });
                 $(".delete").click(function() {
                     const course_id = $(this).parent().siblings(".course_id").html();
-                    alert("delete " + course_id);
-                    $.post("delete.php", {course_id: course_id}, function() {
-                        $("#refresh").click();
-                    });
+                    const course_name = $(this).parent().siblings(".course_name").html()
+                    if (confirm("ยืนยันการลบรายวิชา\n" + course_id + "  " + course_name)) {
+                        $.post("delete.php", {course_id: course_id}, function() {
+                            $("#refresh").click();
+                        });
+                    }
                 });
             });
         </script>

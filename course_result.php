@@ -28,7 +28,9 @@
     $stmt->execute();
     $result = $stmt->get_result();
     if (mysqli_num_rows($result) == 0) {
-      exit("<h1>ไม่พบรายวิชา</h1>");
+      mysqli_close($link);
+      echo "<h1>ไม่พบรายวิชา</h1>";
+      exit();
     }
     echo "<form id=gr_enroll_form>";
     echo "<table>";
@@ -63,7 +65,24 @@
     echo "<p style=text-align:center;>[$total_credit&nbspหน่วยกิต]</p>";
     echo "<p style=text-align:center;><input type=submit value=ลงทะเบียนรายวิชา></p>";
     echo "</form>";
+    mysqli_close($link);
   } else {
+    $sect_stmt = $link->prepare("SELECT GROUP_CONCAT(sect_num) AS sections
+                                  FROM registration
+                                  WHERE course_id = ?
+                                  GROUP BY course_id
+                                  LIMIT 1");
+    $sect_stmt->bind_param("s", $course_id);
+    $sect_stmt->execute();
+    $sect_result = $sect_stmt->get_result();
+    if (mysqli_num_rows($sect_result) != 0) {
+      $enrolled_sect = array();
+      while ($row = mysqli_fetch_array($sect_result)) {
+        array_push($enrolled_sect, $row["sections"]);
+      }
+      $string_enrolled_sect = join(",", $enrolled_sect);
+      echo "<div id=already_enrolled_sect style=display:none;>$string_enrolled_sect</div>";
+    }
     echo "<form id=enroll_form>";
     echo "<table>";
     echo "<td><label for=select_all>เลือกทั้งหมด</label><br><input type=checkbox id=select_all></td>";
@@ -140,6 +159,6 @@
     }
     echo "</table>";
     echo "</form>";
+    mysqli_close($link);
   }
-  mysqli_close($link);
 ?>
