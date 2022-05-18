@@ -163,12 +163,13 @@
                         $(this).blur();
                     },
                     source: function(request, response) {
-                        const term = request.term.toLowerCase().trim();
+                        const raw_term = request.term;
+                        const term = (/^\d{7} .+$/.test(raw_term)) ? raw_term.substr(0, 7) : raw_term.toLowerCase().trim();
                         if (term in search_cache) {
                             response(search_cache[term]);
                             return;
                         }
-                        if (/^[0-9]{1,7}$/.test(term)) {
+                        if (/^\d{1,7}$/.test(term)) {
                             request.mode = "num";
                         } else if (/[a-z]/.test(term)) {
                             request.mode = "en";
