@@ -5,7 +5,7 @@
     exit();
   }
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
-  $id = mysqli_real_escape_string($link, $_GET["course_id"]);
+  $course_id = mysqli_real_escape_string($link, $_GET["course_id"]);
   $stmt = $link->prepare("SELECT *
                           FROM course, section, slot
                           WHERE course.course_id = ?
@@ -13,7 +13,7 @@
                           AND section.course_id = slot.course_id
                           AND section.sect_num = slot.sect_num
                           ORDER BY section.sect_num, slot_id");
-  $stmt->bind_param("s", $id);
+  $stmt->bind_param("s", $course_id);
   $stmt->execute();
   $result = $stmt->get_result();
   if (mysqli_num_rows($result) == 0) {
@@ -21,7 +21,7 @@
                             FROM group_course, course
                             WHERE group_course_id = ?
                             AND group_course.course_id = course.course_id");
-    $stmt->bind_param("s", $id);
+    $stmt->bind_param("s", $course_id);
     $stmt->execute();
     $result = $stmt->get_result();
     if (mysqli_num_rows($result) == 0) {

@@ -39,8 +39,8 @@
 	echo "<table class=enrolled_course>";
 	echo "<tr>";
 	echo "<th>ที่</th>";
-	echo "<th>รหัส</th>";
-	echo "<th>ชื่อ</th>";
+	echo "<th>รหัสรายวิชา</th>";
+	echo "<th>ชื่อรายวิชา</th>";
 	echo "<th>ตอนเรียน</th>";
 	echo "<th>หน่วยกิต</th>";
 	echo "</tr>";

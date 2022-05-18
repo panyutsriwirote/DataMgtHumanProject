@@ -137,23 +137,12 @@
                 }
                 return num_range;
             }
-            function degroup_num(string) {
-                if (/^\d+$/.test(string)) {
-                    return string;
-                } else {
-                    const range = string.split("-");
-                    const degrouped_num = [];
-                    for (let i = range[0]; i <= range[1]; i++) {
-                        degrouped_num.push(i);
-                    }
-                    return degrouped_num;
-                }
-            }
+            let submitted = false;
             $(function() {
                 $("#logout").click(function() {
                     window.location.replace("logout.php");
                 });
-                let submitted = false, prev_term = "";
+                let prev_term = "";
                 $("#search").on("input", function() {
                     submitted = false;
                 }).focusin(function() {
@@ -166,6 +155,7 @@
                     }
                 });
                 $("#refresh").click(function() {
+                    alert("refresh");
                     $.get("enrolled_course.php", function(data) {
                         $("#enrolled_course_view").html(data);
                         $(document).trigger("enrolled_course_loaded");
@@ -245,39 +235,52 @@
                             enrolled_sect.push($(this).val());
                         }
                     });
-                    grouped_sect = group_num(enrolled_sect);
                     credit = ($("#credit").length) ? $("#credit").val() : null;
                     if (enrolled_sect.length == 0) {
                         alert("กรุณาเลือกตอนเรียนอย่างน้อย 1 ตอนเรียน");
                     } else if (credit == "") {
                         alert("กรุณาระบุจำนวนหน่วยกิต");
                     } else {
-                        let msg = "ยืนยันการลงทะเบียนรายวิชา\n" + $("#course_info").text() + "\nตอนเรียน\n" + grouped_sect;
+                        const course_info = $("#course_info").text();
+                        const grouped_sect = group_num(enrolled_sect);
+                        let msg = "ยืนยันการลงทะเบียนรายวิชา\n" + course_info + "\nตอนเรียน\n" + grouped_sect;
                         if ($("#credit").length) {
                             msg += ("\nหน่วยกิต: " + credit);
                         }
                         if (confirm(msg)) {
-                            alert("SEND DATA TO THE SERVER");
-                            $("#course_result").empty();
-                            $("#search").val("");
+                            const course_id = course_info.substr(0, 7);
+                            alert("SEND DATA TO THE SERVER " + course_id);
+                            $.post("enroll.php", {course_id: course_id, enrolled_sect: enrolled_sect, credit: credit}, function(data) {
+                                alert(data);
+                                $("#course_result").empty();
+                                $("#search").val("");
+                                submitted = false;
+                                $("#refresh").click();
+                            });
                         }
                     }
                 });
                 $("#gr_enroll_form").submit(function(e) {
                     e.preventDefault();
-                    if (confirm("ยืนยันการลงทะเบียนรายวิชา\n" + $("#course_info").text())) {
-                        $(".gr_sect").each(function() {
-                            alert(degroup_num($(this).text()));
-                        });
+                    const course_info = $("#course_info").text();
+                    if (confirm("ยืนยันการลงทะเบียนรายวิชา\n" + course_info)) {
                         alert("SEND DATA TO THE SERVER");
-                        $("#course_result").empty();
-                        $("#search").val("");
+                        const course_id = course_info.substr(0, 7);
+                        alert(course_id);
+                        $.post("enroll.php", {course_id: course_id, enrolled_sect: "group", credit: null}, function(data) {
+                            alert(data);
+                            $("#course_result").empty();
+                            $("#search").val("");
+                            submitted = false;
+                            $("#refresh").click();
+                        });
                     }
                 });
             });
             $(document).on("enrolled_course_loaded", function() {
                 $(".edit").click(function() {
                     const course_id = $(this).parent().siblings(".course_id").html();
+                    alert("edit " + course_id);
                     $.get("course_result.php", {course_id: course_id}, function(data) {
                         $("#course_result").html(data);
                         $(document).trigger("form_loaded");
@@ -285,10 +288,10 @@
                 });
                 $(".delete").click(function() {
                     const course_id = $(this).parent().siblings(".course_id").html();
-                    $.post("delete.php", {course_id: course_id}, function(data) {
-                        alert("delete");
+                    alert("delete " + course_id);
+                    $.post("delete.php", {course_id: course_id}, function() {
+                        $("#refresh").click();
                     });
-                    $("#refresh").click();
                 });
             });
         </script>
