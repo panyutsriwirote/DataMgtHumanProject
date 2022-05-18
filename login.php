@@ -19,17 +19,18 @@
   $password = mysqli_real_escape_string($link, $_POST["password"]);
   while ($row = mysqli_fetch_array($result)) {
     if ($password == $row["std_pass"]) {
-      echo "1";
       $_SESSION["login"] = true;
-      $_SESSION["academic_year"] = "2564";
-      $_SESSION["semester"] = "ปลาย";
+      $_SESSION["academic_year"] = "2565";
+      $_SESSION["semester"] = "ต้น";
+      $_SESSION["int_semester"] = 1;
       $_SESSION["student_name"] = $row["fname_th"]." ".$row["lname_th"];
       $_SESSION["student_id"] = $row["std_id"];
       $_SESSION["student_faculty"] = $row["faculty_th_name"];
+      echo "1";
     } else {
-      echo "0";
       session_unset();
       session_destroy();
+      echo "0";
     }
   }
 ?>
