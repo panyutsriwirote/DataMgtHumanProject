@@ -1,17 +1,35 @@
 <?php
   session_start();
-  $_SESSION["login"] = true;
-  $_SESSION["academic_year"] = "2564";
-  $_SESSION["semester"] = "ปลาย";
-  $_SESSION["student_name"] = "ปานญุตม์ ศรีวิโรจน์";
-  $_SESSION["student_id"] = "6340138322";
-	$_SESSION["student_faculty"] = "คณะอักษรศาสตร์";
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
-  $id = mysqli_real_escape_string($link, $_POST["id"]);
-  $password = mysqli_real_escape_string($link, $_POST["password"]);
-  if ($id == "6340138322" && $password == "12345678") {
-    echo "1";
-  } else {
+  $std_id = mysqli_real_escape_string($link, $_POST["id"]);
+  $stmt = $link->prepare("SELECT *
+                          FROM student, faculty
+                          WHERE std_id = ?
+                          AND SUBSTRING(std_id, -2, 2) = faculty_id
+                          LIMIT 1");
+  $stmt->bind_param("s", $std_id);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if (mysqli_num_rows($result) == 0) {
     echo "0";
+    session_unset();
+    session_destroy();
+    exit();
+  }
+  $password = mysqli_real_escape_string($link, $_POST["password"]);
+  while ($row = mysqli_fetch_array($result)) {
+    if ($password == $row["std_pass"]) {
+      echo "1";
+      $_SESSION["login"] = true;
+      $_SESSION["academic_year"] = "2564";
+      $_SESSION["semester"] = "ปลาย";
+      $_SESSION["student_name"] = $row["fname_th"]." ".$row["lname_th"];
+      $_SESSION["student_id"] = $row["std_id"];
+      $_SESSION["student_faculty"] = $row["faculty_th_name"];
+    } else {
+      echo "0";
+      session_unset();
+      session_destroy();
+    }
   }
 ?>

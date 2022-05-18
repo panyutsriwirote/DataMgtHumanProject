@@ -28,7 +28,7 @@
             $(function() {
                 $("#login").submit(function(e) {
                     e.preventDefault();
-                    const id = $("#id").val();
+                    const id = $("#id").val().trim();
                     const password = $("#password").val();
                     $.post("login.php", {id: id, password: password}, function(data) {
                         if (data == "1") {
