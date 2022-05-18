@@ -96,7 +96,6 @@
               max=$row[credit]
               id=credit
               placeholder=หน่วยกิต
-              size=10
               style=text-align:center;>
           </p>";
         }

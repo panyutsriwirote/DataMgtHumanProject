@@ -66,6 +66,7 @@
                 max-width: 80%;
                 overflow-x: break-word;
             }
+            #credit {width: 10ch;}
             @media only screen and (max-width: 600px) {
                 table, p, .header, .ui-menu-item-wrapper {font-size: 13px;}
                 #middle {display: none;}

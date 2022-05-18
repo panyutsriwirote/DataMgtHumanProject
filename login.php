@@ -1,6 +1,6 @@
 <?php
   session_start();
-  $_SESSION["login"] = 1;
+  $_SESSION["login"] = true;
   $_SESSION["academic_year"] = "2564";
   $_SESSION["semester"] = "ปลาย";
   $_SESSION["student_name"] = "ปานญุตม์ ศรีวิโรจน์";
