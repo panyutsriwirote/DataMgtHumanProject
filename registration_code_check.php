@@ -12,6 +12,6 @@
 	if ($registration_code == "12345678") {
 		echo "1";
 	} else {
-		echo "รหัสลงทะเบียนเรียนไม่ถูกต้อง";
+		echo "0";
 	}
 ?>

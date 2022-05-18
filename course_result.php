@@ -28,7 +28,7 @@
       exit("<h1>ไม่พบรายวิชา</h1>");
     }
     echo "<form id=gr_enroll_form>";
-    echo "<table style=border-collapse:collapse class=center>";
+    echo "<table>";
     echo "<td>&nbsp</td>";
     echo "<tr>";
     echo "<th>ลำดับที่</th>";
@@ -59,7 +59,7 @@
     echo "</form>";
   } else {
     echo "<form id=enroll_form>";
-    echo "<table style=border-collapse:collapse class=center>";
+    echo "<table>";
     echo "<td><label for=select_all>เลือกทั้งหมด</label><br><input type=checkbox id=select_all></td>";
     echo "<tr>";
     echo "<th>ลงทะเบียน</th>";

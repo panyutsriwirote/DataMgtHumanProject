@@ -37,7 +37,7 @@
 						if (data == "1") {
 							window.location.replace("registration.php");
 						} else {
-							$("#result").html(data);
+							$("#result").html("รหัสลงทะเบียนเรียนไม่ถูกต้อง");
 						}
 					});
 				});

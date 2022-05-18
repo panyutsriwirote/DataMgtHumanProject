@@ -13,6 +13,7 @@
         <title>ลงทะเบียนเรียน</title>
         <style>
             p {margin: 5px;}
+            input[type=button] {margin-left: 10px;}
             .color1 {background-color: #D6EEEE;}
             .color2 {background-color: #FFFFFF;}
             #search {width: 80%;}
@@ -26,7 +27,7 @@
             }
             #student_info {text-align: right;}
             #middle {
-                position: fixed;
+                position: absolute;
                 width: 100vw;
                 top: 0;
                 text-align: center;
@@ -36,6 +37,8 @@
             table {
                 margin-left: auto;
                 margin-right: auto;
+                border-collapse: collapse;
+                width: 100%;
             }
             #course_result {
                 border: 1px solid black;
@@ -43,15 +46,18 @@
                 overflow-y: scroll;
                 overflow-x: scroll;
             }
-            #enrolled_course {
+            #enrolled_course_view {
                 margin-top: 5px;
                 margin-bottom: 5px;
                 border: 1px solid black;
                 height: 20vh;
-                display: grid;
-                justify-content: center;
-                align-content: center;
                 overflow-y: scroll;
+            }
+            .enrolled_course td {
+                padding: 0 30px;
+                max-width: 25vw;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             th {
                 padding-left: 5px;
@@ -59,7 +65,8 @@
                 position: -webkit-sticky;
                 position: sticky;
                 top: 0;
-                background-color: #FFCCFF;}
+                background-color: #FFCCFF;
+            }
             th:not(:first-child) {border-left: 5px solid white;}
             h1, h2, td {text-align: center;}
             .ui-autocomplete {
@@ -70,6 +77,11 @@
             @media only screen and (max-width: 600px) {
                 table, p, .header, .ui-menu-item-wrapper {font-size: 13px;}
                 #middle {display: none;}
+                .enrolled_course td {padding: 0;}
+                .enrolled_course th {display: none;}
+                .enrolled_course tr:nth-child(odd) > td:not(:first-child) {
+                    border-left: 5px solid #D6EEEE;
+                }
             }
             ::-webkit-scrollbar {-webkit-appearance: none;}
             ::-webkit-scrollbar:vertical {width: 10px;}
@@ -153,6 +165,12 @@
                         $(this).val(prev_term);
                     }
                 });
+                $("#refresh").click(function() {
+                    $.get("enrolled_course.php", function(data) {
+                        $("#enrolled_course_view").html(data);
+                        $(document).trigger("enrolled_course_loaded");
+                    });
+                }).click();
                 const search_cache = {};
                 $("#search").autocomplete({
                     select: function(e, ui) {
@@ -257,6 +275,22 @@
                     }
                 });
             });
+            $(document).on("enrolled_course_loaded", function() {
+                $(".edit").click(function() {
+                    const course_id = $(this).parent().siblings(".course_id").html();
+                    $.get("course_result.php", {course_id: course_id}, function(data) {
+                        $("#course_result").html(data);
+                        $(document).trigger("form_loaded");
+                    });
+                });
+                $(".delete").click(function() {
+                    const course_id = $(this).parent().siblings(".course_id").html();
+                    $.post("delete.php", {course_id: course_id}, function(data) {
+                        alert("delete");
+                    });
+                    $("#refresh").click();
+                });
+            });
         </script>
     </head>
     <body onload="gettime()">
@@ -272,8 +306,8 @@
                 </div>";
             ?>
         </div>
-        <p><b>รายวิชาที่ลงทะเบียนแล้ว</b></p>
-        <div id="enrolled_course">ยังไม่มีรายวิชาที่ลงทะเบียนเรียน</div>
+        <p><b>รายวิชาที่ลงทะเบียนแล้ว</b><input type="button" id="refresh" value="รีเฟรช"></p>
+        <div id="enrolled_course_view"></div>
         <p><b>ลงทะเบียนรายวิชาเพิ่มเติม</b></p>
         <form id="course_search">
             <input type="text" id="search" placeholder="ค้นหาด้วยชื่อวิชาหรือรหัสวิชา">
