@@ -17,10 +17,13 @@
   $stmt->execute();
   $result = $stmt->get_result();
   if (mysqli_num_rows($result) == 0) {
-    $stmt = $link->prepare("SELECT *
+    $stmt = $link->prepare("SELECT group_course_id, group_course.course_id, course_en_name, credit,
+                                    CONCAT(SUBSTRING_INDEX(GROUP_CONCAT(sect_num), ',', 1), '-', SUBSTRING_INDEX(GROUP_CONCAT(sect_num), ',', -1))
+                                    AS section
                             FROM group_course, course
                             WHERE group_course_id = ?
-                            AND group_course.course_id = course.course_id");
+                            AND group_course.course_id = course.course_id
+                            GROUP BY group_course.course_id");
     $stmt->bind_param("s", $course_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -48,7 +51,10 @@
       echo "<td>$cur_num</td>";
       echo "<td>$row[course_id]</td>";
       echo "<td>$row[course_en_name]</td>";
-      echo "<td class=gr_sect>$row[section]</td>";
+      $section = explode("-", $row["section"]);
+      $begin = $section[0];
+      $end = $section[1];
+      echo ($begin == $end) ? "<td class=gr_sect>$begin</td>" : "<td class=gr_sect>$begin-$end</td>";
       echo "<td>$row[credit]</td>";
       echo "</tr>";
       $total_credit += $row["credit"];
