@@ -6,6 +6,11 @@
 	}
 	$link = mysqli_connect("localhost", "root", "", "regchula_courses");
 	$course_id = mysqli_real_escape_string($link, $_POST["course_id"]);
+	$regex = "/\d{7}/";
+	if (!preg_match($regex, $course_id)) {
+		mysqli_close($link);
+		exit();
+	}
 	$std_id = $_SESSION["student_id"];
 	$semester_id = $_SESSION["semester_id"];
 	if ($_POST["enrolled_sect"] == "group") {
@@ -25,12 +30,19 @@
 	} elseif (empty($_POST["credit"])) {
 		$query = "INSERT INTO registration VALUES ";
 		$values = array();
+		$regex = "/\d+/";
 		foreach ($_POST["enrolled_sect"] as $sect) {
+			if (!preg_match($regex, $sect)) {
+				mysqli_close($link);
+				exit();
+			}
 			$sect_num = mysqli_real_escape_string($link, $sect);
 			array_push($values, "('$std_id', $semester_id, '$course_id', $sect_num, NULL)");
 		}
 		$query = $query.join(",", $values);
 		$enroll = mysqli_query($link, $query);
+	} else {
+		//THESIS ENROLLMENT
 	}
 	mysqli_close($link);
 ?>

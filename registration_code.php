@@ -40,15 +40,11 @@
                 h1 {font-size: 20px;}
 				p, div {font-size: 13px;}
 				p {text-align: left;}
-				.logout-container {text-align: center;}
             }
 		</style>
 		<script src="jquery-3.6.0.min.js"></script>
 		<script>
 			$(function() {
-				$("#logout").click(function() {
-					window.location.replace("logout.php");
-				});
 				$("#registration_code_form").submit(function(e) {
 					e.preventDefault();
 					$.post("registration_code_check.php", {registration_code: $("#registration_code").val()}, function(data) {
@@ -86,6 +82,8 @@
 		</form>
 		<br>
 		<br>
-		<p class="logout-container"><input type="button" id="logout" value="ออกจากระบบ"></p>
+		<form action="logout.php">
+			<input type="submit" value="ออกจากระบบ">
+		</form>
 	</body>
 </html>

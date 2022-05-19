@@ -6,6 +6,11 @@
   }
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $course_id = mysqli_real_escape_string($link, $_POST["course_id"]);
+  $regex = "/\d{7}/";
+  if (!preg_match($regex, $course_id)) {
+    mysqli_close($link);
+    exit();
+  }
   $stmt = $link->prepare("DELETE FROM registration
                           WHERE std_id = '$_SESSION[student_id]'
                           AND semester_id = $_SESSION[semester_id]

@@ -33,6 +33,9 @@
                             WHERE course_th_name LIKE concat('%', ?, '%')
                             LIMIT 10");
     $stmt->bind_param("s", $term);
+  } else {
+    mysqli_close($link);
+    exit();
   }
   $stmt->execute();
   $result = $stmt->get_result();

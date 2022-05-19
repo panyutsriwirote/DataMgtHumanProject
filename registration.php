@@ -139,9 +139,6 @@
             }
             let submitted = false;
             $(function() {
-                $("#logout").click(function() {
-                    window.location.replace("logout.php");
-                });
                 let prev_term = "";
                 $("#search").on("input", function() {
                     submitted = false;
@@ -303,10 +300,11 @@
         <div class="header">
             <div id="time"></div>
             <?php
-                echo "<div id=student_info>$_SESSION[student_name]<br>
-                    $_SESSION[student_id]<br>
-                    <input type=button id=logout value=ออกจากระบบ>
-                </div>";
+                echo "<div id=student_info>
+                        $_SESSION[student_name]<br>
+                        $_SESSION[student_id]<br>
+                        <form action=logout.php><input type=submit value=ออกจากระบบ></form>
+                    </div>";
             ?>
         </div>
         <p><b>รายวิชาที่ลงทะเบียนแล้ว</b><input type="button" id="refresh" value="รีเฟรช"></p>

@@ -6,19 +6,15 @@
 	}
 	$link = mysqli_connect("localhost", "root", "", "regchula_courses");
 	$query = "SELECT registration.course_id, course_en_name, GROUP_CONCAT(sect_num) AS section, credit
-				FROM registration, student_reg, course
-				WHERE registration.std_id = student_reg.std_id
-				AND registration.semester_id = student_reg.semester_id
-				AND registration.course_id = course.course_id
+				FROM registration, course
+				WHERE registration.course_id = course.course_id
 				AND registration.std_id = '$_SESSION[student_id]'
 				AND registration.semester_id = $_SESSION[semester_id]
 				GROUP BY registration.course_id
 				UNION
 				SELECT registration_t.course_id, course_en_name, GROUP_CONCAT(sect_num) AS section, selected_credit AS credit
-				FROM registration_t, student_reg, course
-				WHERE registration_t.std_id = student_reg.std_id
-				AND registration_t.semester_id = student_reg.semester_id
-				AND registration_t.course_id = course.course_id
+				FROM registration_t, course
+				WHERE registration_t.course_id = course.course_id
 				AND registration_t.std_id = '$_SESSION[student_id]'
 				AND registration_t.semester_id = $_SESSION[semester_id]
 				GROUP BY registration_t.course_id";

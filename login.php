@@ -17,9 +17,8 @@
     echo "0";
     exit();
   }
-  $password = $_POST["password"];
   while ($row = mysqli_fetch_array($result)) {
-    if ($password == $row["std_pass"]) {
+    if ($_POST["password"] == $row["std_pass"]) {
       $query = "SELECT * FROM semester ORDER BY semester_id DESC LIMIT 1";
       $semester_result = mysqli_query($link, $query);
       while ($row2 = mysqli_fetch_array($semester_result)) {

@@ -6,6 +6,12 @@
   }
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $course_id = mysqli_real_escape_string($link, $_GET["course_id"]);
+  $regex = "/\d{7}/";
+  if (!preg_match($regex, $course_id)) {
+    mysqli_close($link);
+    echo "<h1>ไม่พบรายวิชา</h1>";
+    exit();
+  }
   $stmt = $link->prepare("SELECT *
                           FROM course, section, slot
                           WHERE course.course_id = ?
