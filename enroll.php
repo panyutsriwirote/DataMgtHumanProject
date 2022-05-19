@@ -53,7 +53,7 @@
 						exit();
 					}
 				}
-				$insert = "INSERT INTO registration_t VALUES ";
+				$insert = "REPLACE INTO registration_t VALUES ";
 				$values = array();
 				$regex = "/^\d+$/";
 				foreach ($_POST["enrolled_sect"] as $sect) {
@@ -65,9 +65,28 @@
 				}
 				$insert = $insert.join(",", $values);
 				mysqli_query($link, $insert);
+				if (empty($_POST["to_delete"])) {
+					mysqli_close($link);
+					exit();
+				}
+				$delete = "DELETE FROM registration_t
+							WHERE std_id = '$std_id'
+							AND semester_id = $semester_id
+							AND course_id = '$course[id]'
+							AND sect_num IN (";
+				$sect_arr = array();
+				foreach ($_POST["to_delete"] as $sect) {
+					if (!preg_match($regex, $sect)) {
+						mysqli_close($link);
+						exit();
+					}
+					array_push($sect_arr, "$sect");
+				}
+				$delete = $delete.join(",", $sect_arr).")";
+				mysqli_query($link, $delete);
 				mysqli_close($link);
 			} else {
-				$insert = "INSERT INTO registration VALUES ";
+				$insert = "INSERT IGNORE INTO registration VALUES ";
 				$values = array();
 				$regex = "/^\d+$/";
 				foreach ($_POST["enrolled_sect"] as $sect) {
@@ -79,6 +98,26 @@
 				}
 				$insert = $insert.join(",", $values);
 				mysqli_query($link, $insert);
+				if (empty($_POST["to_delete"])) {
+					mysqli_close($link);
+					exit();
+				}
+				$delete = "DELETE FROM registration
+							WHERE std_id = '$std_id'
+							AND semester_id = $semester_id
+							AND course_id = '$course[id]'
+							AND sect_num IN (";
+				$sect_arr = array();
+				foreach ($_POST["to_delete"] as $sect) {
+					if (!preg_match($regex, $sect)) {
+						mysqli_close($link);
+						exit();
+					}
+					array_push($sect_arr, "$sect");
+				}
+				$delete = $delete.join(",", $sect_arr).")";
+				echo $delete;
+				mysqli_query($link, $delete);
 				mysqli_close($link);
 			}
 		}

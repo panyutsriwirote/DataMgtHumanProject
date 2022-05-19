@@ -120,7 +120,7 @@
       if ($cur_sect == "") {
         echo "<p id=course_info style=text-align:center;>$row[course_id]&nbsp&nbsp$row[course_en_name]</p>";
         echo "<p style=text-align:center;>$row[course_th_name]&nbsp&nbsp[$row[credit]&nbspหน่วยกิต]</p>";
-        echo "<p style=text-align:center;><input type=submit value=ลงทะเบียนรายวิชา></p>";
+        echo "<p style=text-align:center;><input id=submit_form type=submit value=ลงทะเบียนรายวิชา></p>";
         if (in_array($row["course_en_name"], ["THESIS", "DISSERTATION"])) {
           echo "<p style=text-align:center;>";
           echo "<label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp";
