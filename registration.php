@@ -137,9 +137,8 @@
                 }
                 return num_range;
             }
-            let submitted = false;
+            let submitted = false, prev_term = "";
             $(function() {
-                let prev_term = "";
                 $("#search").on("input", function() {
                     submitted = false;
                 }).focusin(function() {
@@ -276,14 +275,16 @@
             $(document).on("enrolled_course_loaded", function() {
                 $(".edit").click(function() {
                     const course_id = $(this).parent().siblings(".course_id").html();
-                    $.get("course_result.php", {course_id: course_id}, function(data) {
-                        $("#course_result").html(data);
-                        $(document).trigger("form_loaded");
-                    });
+                    const course_name = $(this).parent().siblings(".course_name").html();
+                    const val = course_id + " " + course_name;
+                    $("#search").val(val);
+                    $("#course_search").submit();
+                    submitted = true;
+                    prev_term = val;
                 });
                 $(".delete").click(function() {
                     const course_id = $(this).parent().siblings(".course_id").html();
-                    const course_name = $(this).parent().siblings(".course_name").html()
+                    const course_name = $(this).parent().siblings(".course_name").html();
                     if (confirm("ยืนยันการลบรายวิชา\n" + course_id + "  " + course_name)) {
                         $.post("delete.php", {course_id: course_id}, function() {
                             $("#refresh").click();

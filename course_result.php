@@ -73,18 +73,28 @@
     echo "</form>";
     mysqli_close($link);
   } else {
-    $sect_stmt = $link->prepare("SELECT GROUP_CONCAT(sect_num) AS sections
+    $sect_stmt = $link->prepare("SELECT GROUP_CONCAT(sect_num) AS sections, NULL AS credit
                                   FROM registration
                                   WHERE course_id = ?
                                   GROUP BY course_id
+                                  UNION
+                                  SELECT GROUP_CONCAT(sect_num) AS sections, selected_credit AS credit
+                                  FROM registration_t
+                                  WHERE course_id = ?
+                                  GROUP BY course_id
                                   LIMIT 1");
-    $sect_stmt->bind_param("s", $course_id);
+    $sect_stmt->bind_param("ss", $course_id, $course_id);
     $sect_stmt->execute();
     $sect_result = $sect_stmt->get_result();
+    $default_credit = null;
     if (mysqli_num_rows($sect_result) != 0) {
       $enrolled_sect = array();
       while ($row = mysqli_fetch_array($sect_result)) {
-        array_push($enrolled_sect, $row["sections"]);
+          array_push($enrolled_sect, $row["sections"]);
+          $sect_credit = $row["credit"];
+          if (!is_null($sect_credit)) {
+            $default_credit = $sect_credit;
+          }
       }
       $string_enrolled_sect = join(",", $enrolled_sect);
       echo "<div id=already_enrolled_sect style=display:none;>$string_enrolled_sect</div>";
@@ -119,16 +129,14 @@
         echo "<p style=text-align:center;>$row[course_th_name]&nbsp&nbsp[$row[credit]&nbspหน่วยกิต]</p>";
         echo "<p style=text-align:center;><input type=submit value=ลงทะเบียนรายวิชา></p>";
         if (in_array($row["course_en_name"], ["THESIS", "DISSERTATION"])) {
-          echo "<p style=text-align:center;><label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp
-            <input
-              type=number
-              step=0.5
-              min=0.5
-              max=$row[credit]
-              id=credit
-              placeholder=หน่วยกิต
-              style=text-align:center;>
-          </p>";
+          echo "<p style=text-align:center;>";
+          echo "<label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp";
+          if (is_null($default_credit)) {
+            echo "<input type=number step=0.5 min=0.5 max=$row[credit] id=credit placeholder=หน่วยกิต style=text-align:center;>";
+          } else {
+            echo "<input type=number step=0.5 min=0.5 max=$row[credit] value=$default_credit id=credit placeholder=หน่วยกิต style=text-align:center;>";
+          }
+          echo "</p>";
         }
       }
       $sect_num = $row["sect_num"];

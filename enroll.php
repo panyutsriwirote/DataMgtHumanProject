@@ -43,7 +43,7 @@
 		$enroll = mysqli_query($link, $query);
 	} else {
 		$credit = mysqli_real_escape_string($link, $_POST["credit"]);
-		$regex = "/^[123456789]\d*(.0|.5)?$/";
+		$regex = "/^([123456789]\d*(.0|.5)?|0.5)$/";
 		if (!preg_match($regex, $credit)) {
 			mysqli_close($link);
 			exit();

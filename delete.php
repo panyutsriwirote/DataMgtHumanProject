@@ -11,11 +11,17 @@
     mysqli_close($link);
     exit();
   }
-  $stmt = $link->prepare("DELETE FROM registration
+  $stmt1 = $link->prepare("DELETE FROM registration
                           WHERE std_id = '$_SESSION[student_id]'
                           AND semester_id = $_SESSION[semester_id]
                           AND course_id = ?");
-  $stmt->bind_param("s", $course_id);
-  $stmt->execute();
+  $stmt2 = $link->prepare("DELETE FROM registration_t
+                          WHERE std_id = '$_SESSION[student_id]'
+                          AND semester_id = $_SESSION[semester_id]
+                          AND course_id = ?");
+  $stmt1->bind_param("s", $course_id);
+  $stmt2->bind_param("s", $course_id);
+  $stmt1->execute();
+  $stmt2->execute();
   mysqli_close($link);
 ?>
