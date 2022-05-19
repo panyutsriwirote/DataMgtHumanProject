@@ -25,7 +25,7 @@
 	$result = mysqli_query($link, $query);
 	if (mysqli_num_rows($result) == 0) {
 		mysqli_close($link);
-		echo "<table><td><h1>ยังไม่มีรายวิชาที่ลงทะเบียนเรียน</h1></td></table>";
+		echo "<h1>ยังไม่มีรายวิชาที่ลงทะเบียนเรียน</h1>";
 		exit();
 	}
 	echo "<table class=enrolled_course>";

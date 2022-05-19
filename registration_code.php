@@ -19,7 +19,6 @@
 		} else {
 			$_SESSION["registration_code"] = $row["registration_code"];
 			mysqli_close($link);
-
 		}
 	}
 ?>

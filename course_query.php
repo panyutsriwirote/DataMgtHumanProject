@@ -5,7 +5,7 @@
     exit();
   }
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
-  $mode = mysqli_real_escape_string($link, $_GET["mode"]);
+  $mode = $_GET["mode"];
   $term = mysqli_real_escape_string($link, $_GET["term"]);
   if ($mode == "num") {
     $stmt = $link->prepare("SELECT course_id, course_en_name AS course_name

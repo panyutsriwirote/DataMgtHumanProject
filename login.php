@@ -24,9 +24,8 @@
       $semester_result = mysqli_query($link, $query);
       while ($row2 = mysqli_fetch_array($semester_result)) {
         $_SESSION["academic_year"] = $row2["year"];
-        $int_semester = $row2["semester"];
         $_SESSION["semester_id"] = $row2["semester_id"];
-        switch ($int_semester) {
+        switch ($row2["semester"]) {
           case "1":
             $_SESSION["semester"] = "ต้น";
             break;
