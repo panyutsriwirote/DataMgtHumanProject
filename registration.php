@@ -274,7 +274,7 @@
                         msg = "ยืนยันการลบรายวิชา\n" + course_info;
                     } else {
                         msg = "ยืนยันการลงทะเบียนรายวิชา\n" + course_info + "\nตอนเรียน\n" + grouped_sect;
-                        if ($("#credit").length) {
+                        if (credit_dom.length) {
                             msg += ("\nหน่วยกิต: " + credit);
                         }
                     }
