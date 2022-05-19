@@ -119,9 +119,9 @@
             }
             function group_num(list) {
                 const grouped_num = [];
-                for (let i=0;i<list.length;i++) {
+                for (let i = 0; i < list.length; i++) {
                     const num = parseInt(list[i]);
-                    if (i>0 && list[i-1] == num-1) {
+                    if (i > 0 && list[i-1] == num-1) {
                         grouped_num[grouped_num.length-1].push(num);
                         continue;
                     }
@@ -221,28 +221,25 @@
                             return false;
                         }
                     });
-                    if (all_selected) {
-                        $("#select_all").prop("checked", true);
-                    } else {
-                        $("#select_all").prop("checked", false);
-                    }
+                    $("#select_all").prop("checked", (all_selected) ? true : false);
                 });
                 const enrolled_sect_dom = $("#already_enrolled_sect");
                 const already_enrolled_sect = (enrolled_sect_dom.length) ? enrolled_sect_dom.html().split(",") : [];
                 $(".enroll").each(function() {
                     if (already_enrolled_sect.includes($(this).val())) {
-                        this.checked = true;
+                        $(this).click();
                     }
                 });
                 $("#enroll_form").submit(function(e) {
                     e.preventDefault();
                     const enrolled_sect = [];
                     $(".enroll").each(function() {
-                        if (this.checked == true) {
+                        if (this.checked) {
                             enrolled_sect.push($(this).val());
                         }
                     });
-                    credit = ($("#credit").length) ? $("#credit").val() : null;
+                    const credit_dom = $("#credit");
+                    const credit = (credit_dom.length) ? credit_dom.val() : null;
                     if (enrolled_sect.length == 0) {
                         alert("กรุณาเลือกตอนเรียนอย่างน้อย 1 ตอนเรียน");
                     } else if (credit == "") {
