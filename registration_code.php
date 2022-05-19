@@ -14,6 +14,7 @@
 	while ($row = mysqli_fetch_array($result)) {
 		if ($row["login_status"] == 1) {
 			mysqli_close($link);
+			$_SESSION["entered_registration_code"] = true;
 			header("Location: registration.php");
 			exit();
 		} else {
@@ -83,6 +84,7 @@
 				<input type="password" id="registration_code" placeholder="รหัสลงทะเบียนเรียน">
 				<input type="submit" value="ยืนยัน">
 		</form>
+		<br>
 		<br>
 		<p class="logout-container"><input type="button" id="logout" value="ออกจากระบบ"></p>
 	</body>

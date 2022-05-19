@@ -12,6 +12,7 @@
 					AND semester_id = $_SESSION[semester_id]";
 		$result = mysqli_query($link, $query);
 		mysqli_close($link);
+		$_SESSION["entered_registration_code"] = true;
 		echo "1";
 	} else {
 		echo "0";
