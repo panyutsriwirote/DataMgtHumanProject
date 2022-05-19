@@ -4,35 +4,30 @@
     header($_SERVER['SERVER_PROTOCOL']." 404 Not Found", true, 404);
     exit();
   }
-  $link = mysqli_connect("localhost", "root", "", "regchula_courses");
-  $course_id = mysqli_real_escape_string($link, $_GET["course_id"]);
+  $course_id = $_GET["course_id"];
   $regex = "/^\d{7}$/";
   if (!preg_match($regex, $course_id)) {
-    mysqli_close($link);
     echo "<h1>ไม่พบรายวิชา</h1>";
     exit();
   }
-  $stmt = $link->prepare("SELECT *
-                          FROM course, section, slot
-                          WHERE course.course_id = ?
-                          AND course.course_id = section.course_id
-                          AND section.course_id = slot.course_id
-                          AND section.sect_num = slot.sect_num
-                          ORDER BY section.sect_num, slot_id");
-  $stmt->bind_param("s", $course_id);
-  $stmt->execute();
-  $result = $stmt->get_result();
+  $link = mysqli_connect("localhost", "root", "", "regchula_courses");
+  $query = "SELECT *
+            FROM course, section, slot
+            WHERE course.course_id = '$course_id'
+            AND course.course_id = section.course_id
+            AND section.course_id = slot.course_id
+            AND section.sect_num = slot.sect_num
+            ORDER BY section.sect_num, slot_id";
+  $result = mysqli_query($link, $query);
   if (mysqli_num_rows($result) == 0) {
-    $stmt = $link->prepare("SELECT group_course_id, group_course.course_id, course_en_name, credit,
-                                    CONCAT(SUBSTRING_INDEX(GROUP_CONCAT(sect_num), ',', 1), '-', SUBSTRING_INDEX(GROUP_CONCAT(sect_num), ',', -1))
-                                    AS section
-                            FROM group_course, course
-                            WHERE group_course_id = ?
-                            AND group_course.course_id = course.course_id
-                            GROUP BY group_course.course_id");
-    $stmt->bind_param("s", $course_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $query = "SELECT group_course_id, group_course.course_id, course_en_name, credit,
+                    CONCAT(SUBSTRING_INDEX(GROUP_CONCAT(sect_num), ',', 1), '-', SUBSTRING_INDEX(GROUP_CONCAT(sect_num), ',', -1))
+                    AS section
+              FROM group_course, course
+              WHERE group_course_id = '$course_id'
+              AND group_course.course_id = course.course_id
+              GROUP BY group_course.course_id";
+    $result = mysqli_query($link, $query);
     if (mysqli_num_rows($result) == 0) {
       mysqli_close($link);
       echo "<h1>ไม่พบรายวิชา</h1>";
@@ -73,19 +68,17 @@
     echo "</form>";
     mysqli_close($link);
   } else {
-    $sect_stmt = $link->prepare("SELECT GROUP_CONCAT(sect_num) AS sections, NULL AS credit
-                                  FROM registration
-                                  WHERE course_id = ?
-                                  GROUP BY course_id
-                                  UNION
-                                  SELECT GROUP_CONCAT(sect_num) AS sections, selected_credit AS credit
-                                  FROM registration_t
-                                  WHERE course_id = ?
-                                  GROUP BY course_id
-                                  LIMIT 1");
-    $sect_stmt->bind_param("ss", $course_id, $course_id);
-    $sect_stmt->execute();
-    $sect_result = $sect_stmt->get_result();
+    $sect_query = "SELECT GROUP_CONCAT(sect_num) AS sections, NULL AS credit
+                  FROM registration
+                  WHERE course_id = '$course_id'
+                  GROUP BY course_id
+                  UNION
+                  SELECT GROUP_CONCAT(sect_num) AS sections, selected_credit AS credit
+                  FROM registration_t
+                  WHERE course_id = '$course_id'
+                  GROUP BY course_id
+                  LIMIT 1";
+    $sect_result = mysqli_query($link, $sect_query);
     $default_credit = null;
     if (mysqli_num_rows($sect_result) != 0) {
       $enrolled_sect = array();

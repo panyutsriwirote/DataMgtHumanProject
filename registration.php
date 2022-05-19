@@ -151,7 +151,6 @@
                     }
                 });
                 $("#refresh").click(function() {
-                    alert("refresh");
                     $.get("enrolled_course.php", function(data) {
                         $("#enrolled_course_view").html(data);
                         $(document).trigger("enrolled_course_loaded");

@@ -4,24 +4,22 @@
     header($_SERVER['SERVER_PROTOCOL']." 404 Not Found", true, 404);
     exit();
   }
-  $link = mysqli_connect("localhost", "root", "", "regchula_courses");
-  $course_id = mysqli_real_escape_string($link, $_POST["course_id"]);
+  $course_id = $_POST["course_id"];
   $regex = "/^\d{7}$/";
   if (!preg_match($regex, $course_id)) {
     mysqli_close($link);
     exit();
   }
-  $stmt1 = $link->prepare("DELETE FROM registration
-                          WHERE std_id = '$_SESSION[student_id]'
-                          AND semester_id = $_SESSION[semester_id]
-                          AND course_id = ?");
-  $stmt2 = $link->prepare("DELETE FROM registration_t
-                          WHERE std_id = '$_SESSION[student_id]'
-                          AND semester_id = $_SESSION[semester_id]
-                          AND course_id = ?");
-  $stmt1->bind_param("s", $course_id);
-  $stmt2->bind_param("s", $course_id);
-  $stmt1->execute();
-  $stmt2->execute();
+  $link = mysqli_connect("localhost", "root", "", "regchula_courses");
+  $delete1 = "DELETE FROM registration
+              WHERE std_id = '$_SESSION[student_id]'
+              AND semester_id = $_SESSION[semester_id]
+              AND course_id = '$course_id'";
+  $delete2 = "DELETE FROM registration_t
+              WHERE std_id = '$_SESSION[student_id]'
+              AND semester_id = $_SESSION[semester_id]
+              AND course_id = '$course_id'";
+  mysqli_query($link, $delete1);
+  mysqli_query($link, $delete2);
   mysqli_close($link);
 ?>
