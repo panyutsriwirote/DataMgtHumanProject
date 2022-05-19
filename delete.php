@@ -6,7 +6,7 @@
   }
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $course_id = mysqli_real_escape_string($link, $_POST["course_id"]);
-  $regex = "/\d{7}/";
+  $regex = "/^\d{7}$/";
   if (!preg_match($regex, $course_id)) {
     mysqli_close($link);
     exit();

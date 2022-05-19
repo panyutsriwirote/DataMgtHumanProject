@@ -250,7 +250,7 @@
                         }
                         if (confirm(msg)) {
                             const course_id = course_info.substr(0, 7);
-                            $.post("enroll.php", {course_id: course_id, enrolled_sect: enrolled_sect, credit: credit}, function(data) {
+                            $.post("enroll.php", {course_id: course_id, enrolled_sect: enrolled_sect, credit: credit}, function() {
                                 $("#course_result").empty();
                                 $("#search").val("");
                                 submitted = false;
