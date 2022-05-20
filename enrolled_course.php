@@ -5,19 +5,20 @@
 		exit();
 	}
 	$link = mysqli_connect("localhost", "root", "", "regchula_courses");
-	$query = "SELECT registration.course_id, course_en_name, GROUP_CONCAT(sect_num) AS section, credit
+	$query = "SELECT registration.course_id, course_en_name, GROUP_CONCAT(sect_num) AS section, credit, date_time AS time
 				FROM registration, course
 				WHERE registration.course_id = course.course_id
 				AND registration.std_id = '$_SESSION[student_id]'
 				AND registration.semester_id = $_SESSION[semester_id]
 				GROUP BY registration.course_id
 				UNION
-				SELECT registration_t.course_id, course_en_name, GROUP_CONCAT(sect_num) AS section, selected_credit AS credit
+				SELECT registration_t.course_id, course_en_name, GROUP_CONCAT(sect_num) AS section, selected_credit AS credit, date_time AS time
 				FROM registration_t, course
 				WHERE registration_t.course_id = course.course_id
 				AND registration_t.std_id = '$_SESSION[student_id]'
 				AND registration_t.semester_id = $_SESSION[semester_id]
-				GROUP BY registration_t.course_id";
+				GROUP BY registration_t.course_id
+				ORDER BY time";
 	$result = mysqli_query($link, $query);
 	if (mysqli_num_rows($result) == 0) {
 		mysqli_close($link);

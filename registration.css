@@ -1,0 +1,78 @@
+p {margin: 5px;}
+input[type=button] {margin-left: 10px;}
+.color1 {background-color: #D6EEEE;}
+.color2 {background-color: #FFFFFF;}
+#search {width: 80%;}
+.ui-autocomplete {
+    max-width: 80%;
+    overflow-x: break-word;
+}
+form {
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+#student_info {text-align: right;}
+#middle {
+    position: absolute;
+    width: 100%;
+    top: 8;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    z-index: -1;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+#course_result {
+    border: 1px solid black;
+    height: 49vh;
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+#enrolled_course_view {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px solid black;
+    height: 20vh;
+    overflow-y: scroll;
+}
+.enrolled_course td {
+    padding: 0 30px;
+    max-width: 25vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+th {
+    padding-left: 5px;
+    padding-right: 5px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: #FFCCFF;
+}
+th:not(:first-child) {border-left: 5px solid white;}
+h1, h2, td {text-align: center;}
+#credit {width: 10ch;}
+@media only screen and (max-width: 600px) {
+    table, p, .header, .ui-menu-item-wrapper {font-size: 13px;}
+    #middle, .enrolled_course td:first-child, .enrolled_course th {display: none;}
+    .enrolled_course td {padding: 0;}
+    .enrolled_course tr:nth-child(odd) > td:not(:first-child) {
+        border-left: 5px solid #D6EEEE;
+    }
+}
+::-webkit-scrollbar {-webkit-appearance: none;}
+::-webkit-scrollbar:vertical {width: 10px;}
+::-webkit-scrollbar:horizontal {height: 10px;}
+::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+    border: 2px solid #eee;
+}
+::-webkit-scrollbar-track {background-color: #eee;}
