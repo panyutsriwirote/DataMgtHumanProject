@@ -10,11 +10,11 @@
 		exit();
 	}
 	$link = mysqli_connect("localhost", "root", "", "regchula_courses");
-	$query = "SELECT course_en_name AS name, course_id AS id, NULL AS course_id, NULL AS sect_num
+	$query = "SELECT course_en_name AS name, course_id AS id, NULL AS course_id, NULL AS sect_num, credit
 				FROM course
 				WHERE course_id = '$course_id'
 				UNION
-				SELECT NULL AS name, group_course_id AS id, course_id, sect_num
+				SELECT NULL AS name, group_course_id AS id, course_id, sect_num, NULL AS credit
 				FROM group_course
 				WHERE group_course_id = '$course_id'";
 	$result = mysqli_query($link, $query);
@@ -25,8 +25,7 @@
 	}
 	$std_id = $_SESSION["student_id"];
 	$semester_id = $_SESSION["semester_id"];
-	$is_group = ($num_row == 1) ? false : true;
-	if ($is_group) {
+	if ($num_row != 1) {
 		$insert = "INSERT INTO registration VALUES ";
 		$values = array();
 		while ($course = mysqli_fetch_array($result)) {
@@ -37,21 +36,12 @@
 		mysqli_close($link);
 	} else {
 		while ($course = mysqli_fetch_array($result)) {
-			$is_thesis = (in_array($course["name"], ["THESIS", "DISSERTATION"])) ? true : false;
-			if ($is_thesis) {
+			if (in_array($course["name"], ["THESIS", "DISSERTATION"])) {
 				$credit = $_POST["credit"];
 				$regex = "/^([123456789]\d*(.0|.5)?|0.5)$/";
-				if (!preg_match($regex, $credit)) {
+				if (!preg_match($regex, $credit) || intval($credit) > $course["credit"]) {
 					mysqli_close($link);
 					exit();
-				}
-				$check_max_credit = "SELECT credit FROM course WHERE course_id = '$course_id'";
-				$credit_result = mysqli_query($link, $check_max_credit);
-				while ($max_credit = mysqli_fetch_array($credit_result)) {
-					if (intval($credit) > $max_credit["credit"]) {
-						mysqli_close($link);
-						exit();
-					}
 				}
 				$insert = "REPLACE INTO registration_t VALUES ";
 				$values = array();

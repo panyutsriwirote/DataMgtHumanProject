@@ -80,8 +80,8 @@
                   LIMIT 1";
     $sect_result = mysqli_query($link, $sect_query);
     $default_credit = null;
+    $enrolled_sect = array();
     if (mysqli_num_rows($sect_result) != 0) {
-      $enrolled_sect = array();
       while ($row = mysqli_fetch_array($sect_result)) {
           array_push($enrolled_sect, $row["sections"]);
           $sect_credit = $row["credit"];
@@ -120,7 +120,8 @@
       if ($cur_sect == "") {
         echo "<p id=course_info style=text-align:center;>$row[course_id]&nbsp&nbsp$row[course_en_name]</p>";
         echo "<p style=text-align:center;>$row[course_th_name]&nbsp&nbsp[$row[credit]&nbspหน่วยกิต]</p>";
-        echo "<p style=text-align:center;><input id=submit_form type=submit value=ลงทะเบียนรายวิชา></p>";
+        $button_text = (count($enrolled_sect) == 0) ? "ลงทะเบียนรายวิชา" : "แก้ไข";
+        echo "<p style=text-align:center;><input id=submit_form type=submit value=$button_text></p>";
         if (in_array($row["course_en_name"], ["THESIS", "DISSERTATION"])) {
           echo "<p style=text-align:center;>";
           echo "<label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp";
