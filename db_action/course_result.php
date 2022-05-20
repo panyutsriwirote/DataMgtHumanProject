@@ -20,9 +20,7 @@
             ORDER BY section.sect_num, slot_id";
   $result = mysqli_query($link, $query);
   if (mysqli_num_rows($result) == 0) {
-    $query = "SELECT group_course_id, group_course.course_id, course_en_name, credit,
-                    CONCAT(SUBSTRING_INDEX(GROUP_CONCAT(sect_num), ',', 1), '-', SUBSTRING_INDEX(GROUP_CONCAT(sect_num), ',', -1))
-                    AS section
+    $query = "SELECT group_course_id, group_course.course_id, course_en_name, credit, GROUP_CONCAT(sect_num) AS sections
               FROM group_course, course
               WHERE group_course_id = '$course_id'
               AND group_course.course_id = course.course_id
@@ -45,6 +43,30 @@
     echo "</tr>";
     $cur_num = 1;
     $total_credit = 0;
+    function group_num($string) {
+      $arr = explode(",", $string);
+      sort($arr);
+      $grouped_num = array();
+      for ($i = 0; $i < count($arr); $i++) {
+        $num = intval($arr[$i]);
+        if ($i > 0 && $arr[$i-1] == $num-1) {
+          array_push($grouped_num[count($grouped_num)-1], $num);
+          continue;
+        }
+        array_push($grouped_num, [$num]);
+      }
+      $num_range = array();
+      foreach ($grouped_num as $group) {
+        if (count($group) == 1) {
+          array_push($num_range, $group[0]);
+        } else {
+          $begin = $group[0];
+          $end = end($group);
+          array_push($num_range, "$begin-$end");
+        }
+      }
+      return $num_range;
+    }
     while ($row = mysqli_fetch_array($result)) {
       if ($cur_num == 1) {
         echo "<p id=course_info style=text-align:center;>$row[group_course_id]&nbsp&nbspรายวิชาแบบกลุ่ม</p>";
@@ -54,10 +76,8 @@
       echo "<td>$cur_num</td>";
       echo "<td>$row[course_id]</td>";
       echo "<td>$row[course_en_name]</td>";
-      $section = explode("-", $row["section"]);
-      $begin = $section[0];
-      $end = $section[1];
-      echo ($begin == $end) ? "<td class=gr_sect>$begin</td>" : "<td class=gr_sect>$begin-$end</td>";
+      $section_range = join(",", group_num($row["sections"]));
+      echo "<td>$section_range</td>";
       echo "<td>$row[credit]</td>";
       echo "</tr>";
       $total_credit += $row["credit"];
@@ -89,6 +109,7 @@
             $default_credit = $sect_credit;
           }
       }
+      sort($enrolled_sect);
       $string_enrolled_sect = join(",", $enrolled_sect);
       echo "<div id=already_enrolled_sect style=display:none;>$string_enrolled_sect</div>";
     }
