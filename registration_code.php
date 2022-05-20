@@ -42,12 +42,12 @@
 				p {text-align: left;}
             }
 		</style>
-		<script src="jquery-3.6.0.min.js"></script>
+		<script src="js/jquery-3.6.0.min.js"></script>
 		<script>
 			$(function() {
 				$("#registration_code_form").submit(function(e) {
 					e.preventDefault();
-					$.post("registration_code_check.php", {registration_code: $("#registration_code").val()}, function(data) {
+					$.post("db_action/registration_code_check.php", {registration_code: $("#registration_code").val()}, function(data) {
 						if (data == "1") {
 							window.location.replace("registration.php");
 						} else {
@@ -82,7 +82,7 @@
 		</form>
 		<br>
 		<br>
-		<form action="logout.php">
+		<form action="db_action/logout.php">
 			<input type="submit" value="ออกจากระบบ">
 		</form>
 	</body>

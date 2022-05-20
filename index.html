@@ -21,14 +21,14 @@
                 table {border-spacing: 0;}
             }
         </style>
-        <script src="jquery-3.6.0.min.js"></script>
+        <script src="js/jquery-3.6.0.min.js"></script>
         <script>
             $(function() {
                 $("#login").submit(function(e) {
                     e.preventDefault();
                     const id = $("#id").val().trim();
                     const password = $("#password").val();
-                    $.post("login.php", {id: id, password: password}, function(data) {
+                    $.post("db_action/login.php", {id: id, password: password}, function(data) {
                         if (data == "1") {
                             window.location.replace("registration_code.php");
                         } else {

@@ -52,7 +52,7 @@ $(function() {
         }
     });
     $("#refresh").click(function() {
-        $.get("enrolled_course.php", function(data) {
+        $.get("db_action/enrolled_course.php", function(data) {
             $("#enrolled_course_view").html(data);
             $(document).trigger("enrolled_course_loaded");
         });
@@ -84,14 +84,14 @@ $(function() {
                 return;
             }
             request.term = term;
-            $.getJSON("course_query.php", request, function(data) {
+            $.getJSON("db_action/course_query.php", request, function(data) {
                 search_cache[term] = data;
                 response(data);
             });
     }});
     $("#course_search").submit(function(e) {
         e.preventDefault();
-        $.get("course_result.php", {course_id: $("#search").val().substr(0, 7)}, function(data) {
+        $.get("db_action/course_result.php", {course_id: $("#search").val().substr(0, 7)}, function(data) {
             $("#course_result").html(data);
             $(document).trigger("form_loaded");
         });
@@ -178,7 +178,7 @@ $(document).on("form_loaded", function() {
         }
         if (confirm(msg)) {
             const course_id = course_info.substr(0, 7);
-            $.post("enroll.php",
+            $.post("db_action/enroll.php",
             {course_id: course_id,
             enrolled_sect: enrolled_sect,
             credit: credit,
@@ -195,7 +195,7 @@ $(document).on("form_loaded", function() {
         const course_info = $("#course_info").text();
         if (confirm("ยืนยันการลงทะเบียนรายวิชา\n" + course_info)) {
             const course_id = course_info.substr(0, 7);
-            $.post("enroll.php", {course_id: course_id}, function() {
+            $.post("db_action/enroll.php", {course_id: course_id}, function() {
                 $("#course_result").empty();
                 $("#search").val("");
                 submitted = false;
@@ -218,7 +218,7 @@ $(document).on("enrolled_course_loaded", function() {
         const course_id = $(this).parent().siblings(".course_id").html();
         const course_name = $(this).parent().siblings(".course_name").html();
         if (confirm("ยืนยันการลบรายวิชา\n" + course_id + "  " + course_name)) {
-            $.post("delete.php", {course_id: course_id}, function() {
+            $.post("db_action/delete.php", {course_id: course_id}, function() {
                 $("#refresh").click();
             });
         }

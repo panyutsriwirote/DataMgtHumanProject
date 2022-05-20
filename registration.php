@@ -11,11 +11,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>ลงทะเบียนเรียน</title>
-        <link rel="stylesheet" href="registration.css">
-        <link rel="stylesheet" href="jquery-ui.min.css">
-        <script src="jquery-3.6.0.min.js"></script>
-        <script src="jquery-ui.min.js"></script>
-        <script src="registration.js"></script>
+        <link rel="stylesheet" href="css/registration.css">
+        <link rel="stylesheet" href="css/jquery-ui.min.css">
+        <script src="js/jquery-3.6.0.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <script src="js/registration.js"></script>
     </head>
     <body onload="gettime()">
         <?php
@@ -27,7 +27,7 @@
                 echo "<div id=student_info>
                         $_SESSION[student_name]<br>
                         $_SESSION[student_id]<br>
-                        <form action=logout.php><input type=submit value=ออกจากระบบ></form>
+                        <form action=db_action/logout.php><input type=submit value=ออกจากระบบ></form>
                     </div>";
             ?>
         </div>

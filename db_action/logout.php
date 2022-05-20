@@ -6,5 +6,5 @@
 <title>ออกจากระบบ</title>
 <script>
   alert("ออกจากระบบสำเร็จ");
-  window.location.replace("index.html");
+  window.location.replace("../index.html");
 </script>
