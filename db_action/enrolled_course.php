@@ -44,6 +44,7 @@
 	}
 	function group_num($string) {
 		$arr = explode(",", $string);
+		sort($arr);
 		$grouped_num = array();
 		for ($i = 0; $i < count($arr); $i++) {
 			$num = intval($arr[$i]);
