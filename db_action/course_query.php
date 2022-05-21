@@ -10,12 +10,12 @@
   if ($mode == "num") {
     $stmt = $link->prepare("SELECT course_id, course_en_name AS course_name
                             FROM course
-                            WHERE course_id LIKE concat(?, '%')
+                            WHERE course_id LIKE CONCAT(?, '%')
                             LIMIT 10");
     $stmt->bind_param("s", $term);
     $gr_stmt = $link->prepare("SELECT DISTINCT group_course_id
                               FROM group_course
-                              WHERE group_course_id LIKE concat(?, '%')
+                              WHERE group_course_id LIKE CONCAT(?, '%')
                               LIMIT 10");
     $gr_stmt->bind_param("s", $term);
     $gr_stmt->execute();
@@ -23,14 +23,14 @@
   } elseif ($mode == "en") {
     $stmt = $link->prepare("SELECT course_id, course_en_name AS course_name
                             FROM course
-                            WHERE course_en_name LIKE concat('%', ?, '%')
-                            OR course_short_name LIKE concat('%', ?, '%')
+                            WHERE course_en_name LIKE CONCAT('%', ?, '%')
+                            OR course_short_name LIKE CONCAT('%', ?, '%')
                             LIMIT 10");
     $stmt->bind_param("ss", $term, $term);
   } elseif ($mode == "th") {
     $stmt = $link->prepare("SELECT course_id, course_th_name AS course_name
                             FROM course
-                            WHERE course_th_name LIKE concat('%', ?, '%')
+                            WHERE course_th_name LIKE CONCAT('%', ?, '%')
                             LIMIT 10");
     $stmt->bind_param("s", $term);
   } else {

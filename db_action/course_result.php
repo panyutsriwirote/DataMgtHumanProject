@@ -91,11 +91,13 @@
     $sect_query = "SELECT GROUP_CONCAT(sect_num) AS sections, NULL AS credit
                   FROM registration
                   WHERE course_id = '$course_id'
+                  AND std_id = '$_SESSION[student_id]'
                   GROUP BY course_id
                   UNION
                   SELECT GROUP_CONCAT(sect_num) AS sections, selected_credit AS credit
                   FROM registration_t
                   WHERE course_id = '$course_id'
+                  AND std_id = '$_SESSION[student_id]'
                   GROUP BY course_id
                   LIMIT 1";
     $sect_result = mysqli_query($link, $sect_query);
@@ -140,8 +142,12 @@
     while ($row = mysqli_fetch_array($result)) {
       if ($cur_sect == "") {
         echo "<p id=course_info style=text-align:center;>$row[course_id]&nbsp&nbsp$row[course_en_name]</p>";
-        echo "<p style=text-align:center;>$row[course_th_name]&nbsp&nbsp[$row[credit]&nbspหน่วยกิต]</p>";
-        $button_text = (count($enrolled_sect) == 0) ? "ลงทะเบียนรายวิชา" : "แก้ไข";
+        $course_credit = $row["credit"];
+        if (is_null($course_credit)) {
+          $course_credit = "-";
+        }
+        echo "<p style=text-align:center;>$row[course_th_name]&nbsp&nbsp[$course_credit&nbspหน่วยกิต]</p>";
+        $button_text = (count($enrolled_sect) == 0) ? "ลงทะเบียนรายวิชา" : "ยืนยันการแก้ไข";
         echo "<p style=text-align:center;><input id=submit_form type=submit value=$button_text></p>";
         if (in_array($row["course_en_name"], ["THESIS", "DISSERTATION"])) {
           echo "<p style=text-align:center;>";

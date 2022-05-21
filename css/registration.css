@@ -61,7 +61,7 @@ h1, h2, td {text-align: center;}
 #credit {width: 10ch;}
 @media only screen and (max-width: 600px) {
     table, p, .header, .ui-menu-item-wrapper {font-size: 13px;}
-    #middle, .enrolled_course td:first-child, .enrolled_course th {display: none;}
+    #middle, .enrolled_course td:first-child, .enrolled_course th, .course_credit {display: none;}
     .enrolled_course td {padding: 0;}
     .enrolled_course tr:nth-child(odd) > td:not(:first-child) {
         border-left: 5px solid #D6EEEE;

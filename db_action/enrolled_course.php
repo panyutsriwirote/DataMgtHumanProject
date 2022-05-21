@@ -73,7 +73,11 @@
 		echo "<td class=course_name>$row[course_en_name]</td>";
 		$grouped_sect = join(",", group_num($row["section"]));
 		echo "<td>$grouped_sect</td>";
-		echo "<td>$row[credit]</td>";
+		$course_credit = $row["credit"];
+		if (is_null($course_credit)) {
+			$course_credit = "-";
+		}
+		echo "<td class=course_credit>$course_credit</td>";
 		echo "<td><input type=button class=edit value=แก้ไข></td>";
 		echo "<td><input type=button class=delete value=ลบ></td>";
 		echo "</tr>";

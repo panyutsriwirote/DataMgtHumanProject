@@ -30,6 +30,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>กรอกรหัสลงทะเบียนเรียน</title>
 		<style>
+			body {background-color: #ffcccc;}
 			input, h1, form, #result, .student_info, p {text-align: center;}
 			#result {color: red;}
 			p {

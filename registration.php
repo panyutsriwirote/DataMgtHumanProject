@@ -16,6 +16,9 @@
         <script src="js/jquery-3.6.0.min.js"></script>
         <script src="js/jquery-ui.min.js"></script>
         <script src="js/registration.js"></script>
+        <style>
+            body {background-color: #ffcccc;}
+        </style>
     </head>
     <body onload="gettime()">
         <?php

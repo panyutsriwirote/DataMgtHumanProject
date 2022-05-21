@@ -26,7 +26,7 @@
 	$std_id = $_SESSION["student_id"];
 	$semester_id = $_SESSION["semester_id"];
 	if ($num_row != 1) {
-		$insert = "INSERT INTO registration VALUES ";
+		$insert = "INSERT IGNORE INTO registration VALUES ";
 		$values = array();
 		while ($course = mysqli_fetch_array($result)) {
 			array_push($values, "('$std_id', $semester_id, '$course[course_id]', $course[sect_num], NULL)");

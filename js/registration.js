@@ -137,7 +137,7 @@ $(document).on("form_loaded", function() {
             }
         });
         const num_enrolled_sect = enrolled_sect.length;
-        if (num_enrolled_sect == 0 && $("#submit_form").val() != "แก้ไข") {
+        if (num_enrolled_sect == 0 && $("#submit_form").val() != "ยืนยันการแก้ไข") {
             alert("กรุณาเลือกตอนเรียนอย่างน้อย 1 ตอนเรียน");
             return;
         }
