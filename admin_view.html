@@ -27,6 +27,11 @@
         </script>
         <style>
             h1, form, input {text-align: center;}
+            #search_term {width: 80%;}
+            .ui-autocomplete {
+                max-width: 80%;
+                overflow-x: break-word;
+            }
         </style>
     </head>
     <body>
@@ -37,7 +42,9 @@
                 <option value="course">รายวิชา</option>
                 <option value="std">นิสิต</option>
             </select>
-            <input type="text" id="search_term" placeholder="รหัสหรือชื่อรายวิชา" size="50">
+            <br>
+            <br>
+            <input type="text" id="search_term" placeholder="รหัสหรือชื่อรายวิชา">
             <input type="submit" value="สรุป">
         </form>
         <div id="result"></div>
