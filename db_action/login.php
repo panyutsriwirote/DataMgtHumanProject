@@ -3,6 +3,11 @@
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $std_id = mysqli_real_escape_string($link, $_POST["id"]);
   if ($std_id == "admin") {
+    $query = "SELECT * FROM semester ORDER BY semester_id DESC LIMIT 1";
+    $semester_result = mysqli_query($link, $query);
+    while ($row2 = mysqli_fetch_array($semester_result)) {
+      $_SESSION["semester_id"] = $row2["semester_id"];
+    }
     mysqli_close($link);
     $_SESSION["login"] = true;
     echo "2";
