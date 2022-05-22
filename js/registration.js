@@ -91,7 +91,8 @@ $(function() {
     }});
     $("#course_search").submit(function(e) {
         e.preventDefault();
-        $.get("db_action/course_result.php", {course_id: $("#search").val().substr(0, 7)}, function(data) {
+        $("#search").blur();
+        $.get("db_action/course_result.php", {search_term: $("#search").val()}, function(data) {
             $("#course_result").html(data);
             $(document).trigger("form_loaded");
         });

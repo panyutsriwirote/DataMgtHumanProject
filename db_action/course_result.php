@@ -4,13 +4,34 @@
     header($_SERVER['SERVER_PROTOCOL']." 404 Not Found", true, 404);
     exit();
   }
-  $course_id = $_GET["course_id"];
-  $regex = "/^\d{7}$/";
-  if (!preg_match($regex, $course_id)) {
-    echo "<h1>ไม่พบรายวิชา</h1>";
+  $link = mysqli_connect("localhost", "root", "", "regchula_courses");
+  $search_term = mysqli_real_escape_string($link, $_GET["search_term"]);
+  $regex = "/^\d{7} .+$/";
+  if (preg_match($regex, $search_term)) {
+    $search_term = substr($search_term, 0, 7);
+  }
+  $stmt = $link->prepare("SELECT course_id AS id
+                          FROM course
+                          WHERE course_id LIKE CONCAT(?, '%')
+                          OR course_en_name LIKE CONCAT('%', ?, '%')
+                          OR course_short_name LIKE CONCAT('%', ?, '%')
+                          OR course_th_name LIKE CONCAT('%', ?, '%')
+                          UNION
+                          SELECT group_course_id AS id
+                          from group_course
+                          WHERE group_course_id LIKE CONCAT(?, '%')");
+  $stmt->bind_param("sssss", $search_term, $search_term, $search_term, $search_term, $search_term);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $num_row = mysqli_num_rows($result);
+  if ($num_row != 1) {
+    mysqli_close($link);
+    echo ($num_row == 0) ? "<h1>ไม่พบรายวิชา</h1>" : "<h1>พบรายวิชามากกว่า 1 รายวิชา</h1>";
     exit();
   }
-  $link = mysqli_connect("localhost", "root", "", "regchula_courses");
+  while ($row = mysqli_fetch_array($result)) {
+    $course_id = $row["id"];
+  }
   $query = "SELECT *
             FROM course, section, slot
             WHERE course.course_id = '$course_id'
