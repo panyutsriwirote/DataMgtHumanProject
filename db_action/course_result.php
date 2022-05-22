@@ -5,7 +5,7 @@
     exit();
   }
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
-  $search_term = mysqli_real_escape_string($link, $_GET["search_term"]);
+  $search_term = mysqli_real_escape_string($link, trim($_GET["search_term"]));
   $regex = "/^\d{7} .+$/";
   if (preg_match($regex, $search_term)) {
     $search_term = substr($search_term, 0, 7);
