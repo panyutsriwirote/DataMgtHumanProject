@@ -2,6 +2,11 @@
   session_start();
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $std_id = mysqli_real_escape_string($link, $_POST["id"]);
+  if ($std_id == "admin") {
+    mysqli_close($link);
+    echo "2";
+    exit();
+  }
   $stmt = $link->prepare("SELECT *
                           FROM student, faculty
                           WHERE std_id = ?
