@@ -4,6 +4,7 @@
   $std_id = mysqli_real_escape_string($link, $_POST["id"]);
   if ($std_id == "admin") {
     mysqli_close($link);
+    $_SESSION["login"] = true;
     echo "2";
     exit();
   }
