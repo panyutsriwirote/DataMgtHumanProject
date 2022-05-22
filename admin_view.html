@@ -4,17 +4,25 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>สรุปข้อมูลการลงทะเบียน</title>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="css/jquery-ui.min.css">
+        <script src="js/jquery-3.6.0.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
         <script>
             $(function() {
                 $("#mode").change(function() {
                     const input_field = $("#search_term");
-                    if ($(this).val() == "course_id") {
-                        input_field.attr("placeholder", "รหัสหรือชื่อรายวิชา");
-                    } else {
+                    if ($(this).val() == "std") {
                         input_field.attr("placeholder", "รหัสหรือชื่อนิสิต");
+                    } else {
+                        input_field.attr("placeholder", "รหัสหรือชื่อรายวิชา");
                     }
                 });
+                $("#search_term").autocomplete({source: function(request, response) {
+                    request.mode = $("#mode").val();
+                    $.getJSON("db_action/admin_query.php", request, function(data) {
+                        response(data);
+                    });
+                }});
             });
         </script>
         <style>
@@ -23,13 +31,13 @@
     </head>
     <body>
         <h1>สรุปข้อมูลการลงทะเบียนเรียน</h1>
-        <form>
+        <form id="search_form">
             <label for="mode">สรุปตาม:</label>
             <select id="mode">
-                <option value="std_id">นิสิต</option>
-                <option value="course_id">รายวิชา</option>
+                <option value="course">รายวิชา</option>
+                <option value="std">นิสิต</option>
             </select>
-            <input type="text" id="search_term" placeholder="รหัสหรือชื่อนิสิต">
+            <input type="text" id="search_term" placeholder="รหัสหรือชื่อรายวิชา" size="50">
             <input type="submit" value="สรุป">
         </form>
         <div id="result"></div>
