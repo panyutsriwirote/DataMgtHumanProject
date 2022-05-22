@@ -32,6 +32,8 @@
                     $.post("db_action/login.php", {id: id, password: password}, function(data) {
                         if (data == "1") {
                             window.location.replace("registration_code.php");
+                        } else if (data == "2") {
+                            window.location.replace("admin_view.html");
                         } else {
                             $("#result").html("เลขประจำตัวหรือรหัสผ่านไม่ถูกต้อง");
                         }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="th">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>สรุปข้อมูลการลงทะเบียน</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(function() {
+                $("#mode").change(function() {
+                    const input_field = $("#search_term");
+                    if ($(this).val() == "course_id") {
+                        input_field.attr("placeholder", "รหัสหรือชื่อรายวิชา");
+                    } else {
+                        input_field.attr("placeholder", "รหัสหรือชื่อนิสิต");
+                    }
+                });
+            });
+        </script>
+        <style>
+            h1, form, input {text-align: center;}
+        </style>
+    </head>
+    <body>
+        <h1>สรุปข้อมูลการลงทะเบียนเรียน</h1>
+        <form>
+            <label for="mode">สรุปตาม:</label>
+            <select id="mode">
+                <option value="std_id">นิสิต</option>
+                <option value="course_id">รายวิชา</option>
+            </select>
+            <input type="text" id="search_term" placeholder="รหัสหรือชื่อนิสิต">
+            <input type="submit" value="สรุป">
+        </form>
+        <div id="result"></div>
+    </body>
+</html>
