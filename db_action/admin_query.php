@@ -1,6 +1,6 @@
 <?php
   session_start();
-  if (!isset($_SESSION["login"])) {
+  if (!isset($_SESSION["is_admin"])) {
     header($_SERVER['SERVER_PROTOCOL']." 404 Not Found", true, 404);
     exit();
   }

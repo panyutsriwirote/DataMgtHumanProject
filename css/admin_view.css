@@ -1,0 +1,25 @@
+body {background-color: #ffcccc;}
+.color1 {background-color: #D6EEEE;}
+.color2 {background-color: #FFFFFF;}
+h1, form, input, td {text-align: center;}
+#search_term {width: 80%;}
+.ui-autocomplete {
+    max-width: 80%;
+    overflow-x: break-word;
+}
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+th {
+    padding-left: 5px;
+    padding-right: 5px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: #FFCCFF;
+}
+th:not(:first-child) {border-left: 5px solid white;}
+#logout {text-align: right;}

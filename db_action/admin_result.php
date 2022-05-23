@@ -1,6 +1,6 @@
 <?php
   session_start();
-  if (!isset($_SESSION["login"])) {
+  if (!isset($_SESSION["is_admin"])) {
     header($_SERVER['SERVER_PROTOCOL']." 404 Not Found", true, 404);
     exit();
   }
@@ -116,6 +116,11 @@
     $stmt->bind_param("ss", $term, $term);
     $stmt->execute();
     $result = $stmt->get_result();
+    if (mysqli_num_rows($result) == 0) {
+      mysqli_close($link);
+      echo "<h1>ไม่พบข้อมูล</h1>";
+      exit();
+    }
     echo "<table>";
     echo "<tr>";
     echo "<th>รหัสนิสิต</th>";
