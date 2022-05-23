@@ -7,14 +7,11 @@
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $mode = $_GET["mode"];
   $term = mysqli_real_escape_string($link, $_GET["term"]);
-  $is_std_id = "/^\d{10} .+$/";
-  $is_course_id = "/^\d{7} .+$/";
-  if (preg_match($is_std_id, $term)) {
-    $term = substr($term, 0, 10);
-  } elseif (preg_match($is_course_id, $term)) {
-    $term = substr($term, 0, 7);
-  }
   if ($mode == "std") {
+    $full_term = "/^\d{10} .+$/";
+    if (preg_match($full_term, $term)) {
+      $term = substr($term, 0, 10);
+    }
     $stmt = $link->prepare("SELECT std_id AS id, CONCAT(fname_th, ' ', lname_th) AS name
                             FROM student
                             WHERE std_id LIKE CONCAT(?, '%')
@@ -23,6 +20,10 @@
                             LIMIT 10");
     $stmt->bind_param("sss", $term, $term, $term);
   } elseif ($mode == "course") {
+    $full_term = "/^\d{7} .+$/";
+    if (preg_match($full_term, $term)) {
+      $term = substr($term, 0, 7);
+    }
     $stmt = $link->prepare("SELECT course_id AS id, course_en_name AS name
                             FROM course
                             WHERE course_id LIKE CONCAT(?, '%')
