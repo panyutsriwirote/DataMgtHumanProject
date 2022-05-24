@@ -35,9 +35,9 @@
 		mysqli_query($link, $insert);
 		mysqli_close($link);
 	} else {
+		$regex = "/^\d+$/";
 		while ($course = mysqli_fetch_array($result)) {
 			if (in_array($course["name"], ["THESIS", "DISSERTATION"])) {
-				$regex = "/^\d+$/";
 				if (!empty($_POST["enrolled_sect"])) {
 					$credit = $_POST["credit"];
 					$credit_regex = "/^([123456789]\d*(.0|.5)?|0.5)$/";
@@ -78,7 +78,6 @@
 				mysqli_query($link, $delete);
 				mysqli_close($link);
 			} else {
-				$regex = "/^\d+$/";
 				if (!empty($_POST["enrolled_sect"])) {
 					$insert = "INSERT IGNORE INTO registration VALUES ";
 					$values = array();
