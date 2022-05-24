@@ -152,9 +152,9 @@
       echo "<p style=text-align:center;>";
       echo "<label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp";
       if (is_null($default_credit)) {
-        echo "<input type=number step=0.5 min=0.5 max=$row[credit] id=credit placeholder=หน่วยกิต style=text-align:center;>";
+        echo "<input type=number step=0.5 min=0.5 max=$course_credit id=credit placeholder=หน่วยกิต style=text-align:center;>";
       } else {
-        echo "<input type=number step=0.5 min=0.5 max=$row[credit] value=$default_credit id=credit placeholder=หน่วยกิต style=text-align:center;>";
+        echo "<input type=number step=0.5 min=0.5 max=$course_credit value=$default_credit id=credit placeholder=หน่วยกิต style=text-align:center;>";
       }
       echo "</p>";
     }
