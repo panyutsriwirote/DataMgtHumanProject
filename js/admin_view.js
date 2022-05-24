@@ -15,7 +15,6 @@ $(function() {
             $("#search_form").submit();
             submitted = true;
             prev_term = $(this).val();
-            $(this).blur();
         },
         source: function(request, response) {
             const raw_term = request.term;
