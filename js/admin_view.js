@@ -8,6 +8,17 @@ $(function() {
         }
     });
     let submitted = false, prev_term = "";
+    $("#search_term").on("input", function() {
+        submitted = false;
+    }).focusin(function() {
+        if (submitted) {
+            $(this).val("");
+        }
+    }).focusout(function() {
+        if (submitted) {
+            $(this).val(prev_term);
+        }
+    });
     const cache = {};
     $("#search_term").autocomplete({
         select : function(e, ui) {
@@ -35,17 +46,6 @@ $(function() {
                 cache[term] = data;
                 response(data);
             });
-        }
-    });
-    $("#search_term").on("input", function() {
-        submitted = false;
-    }).focusin(function() {
-        if (submitted) {
-            $(this).val("");
-        }
-    }).focusout(function() {
-        if (submitted) {
-            $(this).val(prev_term);
         }
     });
     $("#search_form").submit(function(e) {
