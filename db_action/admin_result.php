@@ -126,8 +126,6 @@
     echo "<th>รหัสนิสิต</th>";
     echo "<th>ชื่อนิสิต</th>";
     echo "<th>ตอนเรียน</th>";
-    echo "<th>เวลา</th>";
-    echo "</tr>";
     $class = "color2";
     $first_row = true;
     while ($row = mysqli_fetch_array($result)) {
