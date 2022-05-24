@@ -1,7 +1,7 @@
 <?php
     session_start();
     if (!isset($_SESSION["is_admin"])) {
-        header($_SERVER['SERVER_PROTOCOL']." 404 Not Found", true, 404);
+        header($_SERVER['SERVER_PROTOCOL']." 403 Forbidden", true, 403);
         exit();
     }
 ?>
