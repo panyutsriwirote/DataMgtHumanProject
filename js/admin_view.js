@@ -8,6 +8,7 @@ $(function() {
         }
     });
     let submitted = false, prev_term = "";
+    const cache = {};
     $("#search_term").autocomplete({
         select : function(e, ui) {
             $(this).val(ui.item.value);
@@ -17,11 +18,26 @@ $(function() {
             $(this).blur();
         },
         source: function(request, response) {
-        request.mode = $("#mode").val();
-        $.getJSON("db_action/admin_query.php", request, function(data) {
-            response(data);
-        });
-    }});
+            const raw_term = request.term;
+            let term;
+            if (/^\d{7} .+$/.test(raw_term)) {
+                term = raw_term.substr(0, 7);
+            } else if (/^\d{10} .+$/.test(raw_term)) {
+                term = raw_term.substr(0, 10);
+            } else {
+                term = raw_term.toLowerCase().trim();
+            }
+            if (term in cache) {
+                response(cache[term]);
+                return;
+            }
+            request.mode = $("#mode").val();
+            $.getJSON("db_action/admin_query.php", request, function(data) {
+                cache[term] = data;
+                response(data);
+            });
+        }
+    });
     $("#search_term").on("input", function() {
         submitted = false;
     }).focusin(function() {

@@ -88,7 +88,8 @@ $(function() {
                 search_cache[term] = data;
                 response(data);
             });
-    }});
+        }
+    });
     $("#course_search").submit(function(e) {
         e.preventDefault();
         $("#search").blur();
