@@ -5,9 +5,8 @@
   if ($std_id == "admin" && $_POST["password"] == "admin") {
     $query = "SELECT * FROM semester ORDER BY semester_id DESC LIMIT 1";
     $semester_result = mysqli_query($link, $query);
-    while ($row2 = mysqli_fetch_array($semester_result)) {
-      $_SESSION["semester_id"] = $row2["semester_id"];
-    }
+    $row = $semester_result->fetch_assoc();
+    $_SESSION["semester_id"] = $row["semester_id"];
     mysqli_close($link);
     $_SESSION["is_admin"] = true;
     echo "2";
@@ -26,34 +25,32 @@
     echo "0";
     exit();
   }
-  while ($row = mysqli_fetch_array($result)) {
-    if ($_POST["password"] == $row["std_pass"]) {
-      $query = "SELECT * FROM semester ORDER BY semester_id DESC LIMIT 1";
-      $semester_result = mysqli_query($link, $query);
-      while ($row2 = mysqli_fetch_array($semester_result)) {
-        $_SESSION["academic_year"] = $row2["year"];
-        $_SESSION["semester_id"] = $row2["semester_id"];
-        switch ($row2["semester"]) {
-          case "1":
-            $_SESSION["semester"] = "ต้น";
-            break;
-          case "2":
-            $_SESSION["semester"] = "ปลาย";
-            break;
-          case "3":
-            $_SESSION["semester"] = "ฤดูร้อน";
-            break;
-        }
-      }
-      $_SESSION["login"] = true;
-      $_SESSION["student_name"] = $row["fname_th"]." ".$row["lname_th"];
-      $_SESSION["student_id"] = $row["std_id"];
-      $_SESSION["student_faculty"] = $row["faculty_th_name"];
-      mysqli_close($link);
-      echo "1";
-    } else {
-      mysqli_close($link);
-      echo "0";
+  $row = $result->fetch_assoc();
+  if ($_POST["password"] == $row["std_pass"]) {
+    $query = "SELECT * FROM semester ORDER BY semester_id DESC LIMIT 1";
+    $semester_result = mysqli_query($link, $query);
+    $row2 = $semester_result->fetch_assoc();
+    $_SESSION["academic_year"] = $row2["year"];
+    $_SESSION["semester_id"] = $row2["semester_id"];
+    switch ($row2["semester"]) {
+      case "1":
+        $_SESSION["semester"] = "ต้น";
+        break;
+      case "2":
+        $_SESSION["semester"] = "ปลาย";
+        break;
+      case "3":
+        $_SESSION["semester"] = "ฤดูร้อน";
+        break;
     }
+    $_SESSION["login"] = true;
+    $_SESSION["student_name"] = $row["fname_th"]." ".$row["lname_th"];
+    $_SESSION["student_id"] = $row["std_id"];
+    $_SESSION["student_faculty"] = $row["faculty_th_name"];
+    mysqli_close($link);
+    echo "1";
+  } else {
+    mysqli_close($link);
+    echo "0";
   }
 ?>

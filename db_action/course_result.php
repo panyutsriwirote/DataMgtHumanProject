@@ -6,8 +6,7 @@
   }
   $link = mysqli_connect("localhost", "root", "", "regchula_courses");
   $search_term = mysqli_real_escape_string($link, trim($_GET["search_term"]));
-  $regex = "/^\d{7} .+$/";
-  if (preg_match($regex, $search_term)) {
+  if (preg_match("/^\d{7} .+$/", $search_term)) {
     $search_term = substr($search_term, 0, 7);
   }
   $stmt = $link->prepare("SELECT course_id AS id
@@ -29,9 +28,8 @@
     echo ($num_row == 0) ? "<h1>ไม่พบรายวิชา</h1>" : "<h1>พบรายวิชามากกว่า 1 รายวิชา</h1>";
     exit();
   }
-  while ($row = mysqli_fetch_array($result)) {
-    $course_id = $row["id"];
-  }
+  $row = $result->fetch_assoc();
+  $course_id = $row["id"];
   $query = "SELECT *
             FROM course, section, slot
             WHERE course.course_id = '$course_id'
@@ -52,7 +50,10 @@
       echo "<h1>ไม่พบรายวิชา</h1>";
       exit();
     }
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
+    $group_course_id = $rows[0]["group_course_id"];
     echo "<form id=gr_enroll_form>";
+    echo "<p id=course_info style=text-align:center;>$group_course_id&nbsp&nbspรายวิชาแบบกลุ่ม</p>";
     echo "<table>";
     echo "<td>&nbsp</td>";
     echo "<tr>";
@@ -88,10 +89,7 @@
       }
       return $num_range;
     }
-    while ($row = mysqli_fetch_array($result)) {
-      if ($cur_num == 1) {
-        echo "<p id=course_info style=text-align:center;>$row[group_course_id]&nbsp&nbspรายวิชาแบบกลุ่ม</p>";
-      }
+    foreach ($rows as $row) {
       $class = ($cur_num % 2) + 1;
       echo "<tr class=color$class>";
       echo "<td>$cur_num</td>";
@@ -136,7 +134,30 @@
       $string_enrolled_sect = join(",", $enrolled_sect);
       echo "<div id=already_enrolled_sect style=display:none;>$string_enrolled_sect</div>";
     }
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
+    $first_row = $rows[0];
+    $id = $first_row["course_id"];
+    $course_en_name = $first_row["course_en_name"];
+    $course_th_name = $first_row["course_th_name"];
+    $course_credit = $first_row["credit"];
+    if (is_null($course_credit)) {
+      $course_credit = "-";
+    }
     echo "<form id=enroll_form>";
+    echo "<p id=course_info style=text-align:center;>$id&nbsp&nbsp$course_en_name</p>";
+    echo "<p style=text-align:center;>$course_th_name&nbsp&nbsp[$course_credit&nbspหน่วยกิต]</p>";
+    $button_text = (count($enrolled_sect) == 0) ? "ลงทะเบียนรายวิชา" : "ยืนยันการแก้ไข";
+    echo "<p style=text-align:center;><input id=submit_form type=submit value=$button_text></p>";
+    if (in_array($course_en_name, ["THESIS", "DISSERTATION"])) {
+      echo "<p style=text-align:center;>";
+      echo "<label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp";
+      if (is_null($default_credit)) {
+        echo "<input type=number step=0.5 min=0.5 max=$row[credit] id=credit placeholder=หน่วยกิต style=text-align:center;>";
+      } else {
+        echo "<input type=number step=0.5 min=0.5 max=$row[credit] value=$default_credit id=credit placeholder=หน่วยกิต style=text-align:center;>";
+      }
+      echo "</p>";
+    }
     echo "<table>";
     echo "<td><label for=select_all>เลือกทั้งหมด</label><br><input type=checkbox id=select_all></td>";
     echo "<tr>";
@@ -160,27 +181,7 @@
         return "color1";
       }
     }
-    while ($row = mysqli_fetch_array($result)) {
-      if ($cur_sect == "") {
-        echo "<p id=course_info style=text-align:center;>$row[course_id]&nbsp&nbsp$row[course_en_name]</p>";
-        $course_credit = $row["credit"];
-        if (is_null($course_credit)) {
-          $course_credit = "-";
-        }
-        echo "<p style=text-align:center;>$row[course_th_name]&nbsp&nbsp[$course_credit&nbspหน่วยกิต]</p>";
-        $button_text = (count($enrolled_sect) == 0) ? "ลงทะเบียนรายวิชา" : "ยืนยันการแก้ไข";
-        echo "<p style=text-align:center;><input id=submit_form type=submit value=$button_text></p>";
-        if (in_array($row["course_en_name"], ["THESIS", "DISSERTATION"])) {
-          echo "<p style=text-align:center;>";
-          echo "<label for=credit>เลือกหน่วยกิต</label>&nbsp&nbsp";
-          if (is_null($default_credit)) {
-            echo "<input type=number step=0.5 min=0.5 max=$row[credit] id=credit placeholder=หน่วยกิต style=text-align:center;>";
-          } else {
-            echo "<input type=number step=0.5 min=0.5 max=$row[credit] value=$default_credit id=credit placeholder=หน่วยกิต style=text-align:center;>";
-          }
-          echo "</p>";
-        }
-      }
+    foreach ($rows as $row) {
       $sect_num = $row["sect_num"];
       if ($cur_sect != $sect_num) {
         $class = switch_class($class);

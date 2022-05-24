@@ -11,16 +11,15 @@
 				AND semester_id = $_SESSION[semester_id]
 				LIMIT 1";
 	$result = mysqli_query($link, $query);
-	while ($row = mysqli_fetch_array($result)) {
-		if ($row["login_status"] == 1) {
-			mysqli_close($link);
-			$_SESSION["entered_registration_code"] = true;
-			header("Location: registration.php");
-			exit();
-		} else {
-			$_SESSION["registration_code"] = $row["registration_code"];
-			mysqli_close($link);
-		}
+	$row = $result->fetch_assoc();
+	if ($row["login_status"] == 1) {
+		mysqli_close($link);
+		$_SESSION["entered_registration_code"] = true;
+		header("Location: registration.php");
+		exit();
+	} else {
+		$_SESSION["registration_code"] = $row["registration_code"];
+		mysqli_close($link);
 	}
 ?>
 <!DOCTYPE html>

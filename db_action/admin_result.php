@@ -39,8 +39,7 @@
     return $num_range;
   }
   if ($mode == "std") {
-    $full_term = "/\d{10} .+/";
-    if (preg_match($full_term, $term)) {
+    if (preg_match("/^\d{10} .+$/", $term)) {
       $term = substr($term, 0, 10);
     }
     $stmt = $link->prepare("SELECT registration.course_id, course_en_name, GROUP_CONCAT(sect_num) AS section, credit, date_time AS time
@@ -95,8 +94,7 @@
     }
     echo "</table>";
   } elseif ($mode == "course") {
-    $full_term = "/\d{7} .+/";
-    if (preg_match($full_term, $term)) {
+    if (preg_match("/^\d{7} .+$/", $term)) {
       $term = substr($term, 0, 7);
     }
     $stmt = $link->prepare("SELECT NULL AS credit, student.std_id, CONCAT(fname_th, ' ', lname_th) AS std_name, GROUP_CONCAT(sect_num) AS section, date_time AS time
@@ -121,31 +119,27 @@
       echo "<h1>ไม่พบข้อมูล</h1>";
       exit();
     }
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
+    $there_is_credit = !is_null($rows[0]["credit"]);
     echo "<table>";
     echo "<tr>";
     echo "<th>รหัสนิสิต</th>";
     echo "<th>ชื่อนิสิต</th>";
     echo "<th>ตอนเรียน</th>";
+    if ($there_is_credit) {
+      echo "<th>หน่วยกิต</th>";
+    }
+    echo "<th>เวลา</th>";
+    echo "</tr>";
     $class = "color2";
-    $first_row = true;
-    while ($row = mysqli_fetch_array($result)) {
-      $credit = $row["credit"];
-      if ($first_row && !is_null($credit)) {
-        echo "<th>หน่วยกิต</th>";
-        echo "<th>เวลา</th>";
-        echo "</tr>";
-      } elseif ($first_row) {
-        echo "<th>เวลา</th>";
-        echo "</tr>";
-      }
-      $first_row = false;
+    foreach ($rows as $row) {
       echo "<tr class=$class>";
       echo "<td>$row[std_id]</td>";
       echo "<td>$row[std_name]</td>";
       $grouped_sect = join(",", group_num($row["section"]));
       echo "<td>$grouped_sect</td>";
-      if (!is_null($credit)) {
-        echo "<td>$credit</td>";
+      if ($there_is_credit) {
+        echo "<td>$row[credit]</td>";
       }
       echo "<td>$row[time]</td>";
       echo "</tr>";
