@@ -37,24 +37,26 @@
 	} else {
 		while ($course = mysqli_fetch_array($result)) {
 			if (in_array($course["name"], ["THESIS", "DISSERTATION"])) {
-				$credit = $_POST["credit"];
-				$regex = "/^([123456789]\d*(.0|.5)?|0.5)$/";
-				if (!preg_match($regex, $credit) || intval($credit) > $course["credit"]) {
-					mysqli_close($link);
-					exit();
-				}
-				$insert = "REPLACE INTO registration_t VALUES ";
-				$values = array();
 				$regex = "/^\d+$/";
-				foreach ($_POST["enrolled_sect"] as $sect) {
-					if (!preg_match($regex, $sect)) {
+				if (!empty($_POST["enrolled_sect"])) {
+					$credit = $_POST["credit"];
+					$credit_regex = "/^([123456789]\d*(.0|.5)?|0.5)$/";
+					if (!preg_match($credit_regex, $credit) || intval($credit) > $course["credit"]) {
 						mysqli_close($link);
 						exit();
 					}
-					array_push($values, "('$std_id', $semester_id, '$course[id]', $sect, $credit, NULL)");
+					$insert = "REPLACE INTO registration_t VALUES ";
+					$values = array();
+					foreach ($_POST["enrolled_sect"] as $sect) {
+						if (!preg_match($regex, $sect)) {
+							mysqli_close($link);
+							exit();
+						}
+						array_push($values, "('$std_id', $semester_id, '$course[id]', $sect, $credit, NULL)");
+					}
+					$insert = $insert.join(",", $values);
+					mysqli_query($link, $insert);
 				}
-				$insert = $insert.join(",", $values);
-				mysqli_query($link, $insert);
 				if (empty($_POST["to_delete"])) {
 					mysqli_close($link);
 					exit();
@@ -76,18 +78,20 @@
 				mysqli_query($link, $delete);
 				mysqli_close($link);
 			} else {
-				$insert = "INSERT IGNORE INTO registration VALUES ";
-				$values = array();
 				$regex = "/^\d+$/";
-				foreach ($_POST["enrolled_sect"] as $sect) {
-					if (!preg_match($regex, $sect)) {
-						mysqli_close($link);
-						exit();
+				if (!empty($_POST["enrolled_sect"])) {
+					$insert = "INSERT IGNORE INTO registration VALUES ";
+					$values = array();
+					foreach ($_POST["enrolled_sect"] as $sect) {
+						if (!preg_match($regex, $sect)) {
+							mysqli_close($link);
+							exit();
+						}
+						array_push($values, "('$std_id', $semester_id, '$course[id]', $sect, NULL)");
 					}
-					array_push($values, "('$std_id', $semester_id, '$course[id]', $sect, NULL)");
+					$insert = $insert.join(",", $values);
+					mysqli_query($link, $insert);
 				}
-				$insert = $insert.join(",", $values);
-				mysqli_query($link, $insert);
 				if (empty($_POST["to_delete"])) {
 					mysqli_close($link);
 					exit();
@@ -106,7 +110,6 @@
 					array_push($sect_arr, "$sect");
 				}
 				$delete = $delete.join(",", $sect_arr).")";
-				echo $delete;
 				mysqli_query($link, $delete);
 				mysqli_close($link);
 			}
