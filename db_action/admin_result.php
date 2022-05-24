@@ -99,14 +99,14 @@
     if (preg_match($full_term, $term)) {
       $term = substr($term, 0, 7);
     }
-    $stmt = $link->prepare("SELECT student.std_id, CONCAT(fname_th, ' ', lname_th) AS std_name, GROUP_CONCAT(sect_num) AS section, date_time AS time
+    $stmt = $link->prepare("SELECT NULL AS credit, student.std_id, CONCAT(fname_th, ' ', lname_th) AS std_name, GROUP_CONCAT(sect_num) AS section, date_time AS time
                             FROM student, registration
                             WHERE student.std_id = registration.std_id
                             AND semester_id = $_SESSION[semester_id]
                             AND course_id = ?
                             GROUP BY registration.std_id, time
                             UNION
-                            SELECT student.std_id, CONCAT(fname_th, ' ', lname_th) AS std_name, GROUP_CONCAT(sect_num) AS section, date_time AS time
+                            SELECT selected_credit AS credit, student.std_id, CONCAT(fname_th, ' ', lname_th) AS std_name, GROUP_CONCAT(sect_num) AS section, date_time AS time
                             FROM student, registration_t
                             WHERE student.std_id = registration_t.std_id
                             AND semester_id = $_SESSION[semester_id]
@@ -129,12 +129,26 @@
     echo "<th>เวลา</th>";
     echo "</tr>";
     $class = "color2";
+    $first_row = true;
     while ($row = mysqli_fetch_array($result)) {
+      $credit = $row["credit"];
+      if ($first_row && !is_null($credit)) {
+        echo "<th>หน่วยกิต</th>";
+        echo "<th>เวลา</th>";
+        echo "</tr>";
+      } elseif ($first_row) {
+        echo "<th>เวลา</th>";
+        echo "</tr>";
+      }
+      $first_row = false;
       echo "<tr class=$class>";
       echo "<td>$row[std_id]</td>";
       echo "<td>$row[std_name]</td>";
       $grouped_sect = join(",", group_num($row["section"]));
       echo "<td>$grouped_sect</td>";
+      if (!is_null($credit)) {
+        echo "<td>$credit</td>";
+      }
       echo "<td>$row[time]</td>";
       echo "</tr>";
       $class = switch_class($class);
