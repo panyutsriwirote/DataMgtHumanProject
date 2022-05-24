@@ -42,6 +42,7 @@ $(function() {
                 return;
             }
             request.mode = $("#mode").val();
+            request.term = term;
             $.getJSON("db_action/admin_query.php", request, function(data) {
                 cache[term] = data;
                 response(data);
