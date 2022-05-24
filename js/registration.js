@@ -211,10 +211,10 @@ $(document).on("enrolled_course_loaded", function() {
         const course_id = $(this).parent().siblings(".course_id").html();
         const course_name = $(this).parent().siblings(".course_name").html();
         const val = course_id + " " + course_name;
-        $("#search").val(val);
-        $("#course_search").submit();
         submitted = true;
         prev_term = val;
+        $("#search").val(val);
+        $("#course_search").submit();
     });
     $(".delete").click(function() {
         const course_id = $(this).parent().siblings(".course_id").html();
