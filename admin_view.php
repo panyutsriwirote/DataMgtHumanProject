@@ -30,7 +30,7 @@
             </select>
             <br>
             <br>
-            <input type="text" id="search_term" placeholder="รหัสหรือชื่อรายวิชา">
+            <input type="text" id="search_term" placeholder="รหัสหรือชื่อรายวิชา" required>
             <input type="submit" value="สรุป">
         </form>
         <br>

@@ -35,7 +35,7 @@
         <div id="enrolled_course_view"></div>
         <p><b>ลงทะเบียนรายวิชาเพิ่มเติม</b></p>
         <form id="course_search">
-            <input type="text" id="search" placeholder="ค้นหาด้วยชื่อวิชาหรือรหัสวิชา">
+            <input type="text" id="search" placeholder="ค้นหาด้วยชื่อวิชาหรือรหัสวิชา" required>
             <input type="submit" value="ค้นหา">
         </form>
         <div id="course_result"></div>

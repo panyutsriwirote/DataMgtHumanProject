@@ -77,7 +77,7 @@
 		<br>
 		<form id="registration_code_form">
 				<label for="registration_code">รหัสการลงทะเบียนเรียน</label>
-				<input type="password" id="registration_code" placeholder="รหัสลงทะเบียนเรียน">
+				<input type="password" id="registration_code" placeholder="รหัสลงทะเบียนเรียน" required>
 				<input type="submit" value="ยืนยัน">
 		</form>
 		<br>

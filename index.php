@@ -61,11 +61,11 @@
             <table>
                 <tr>
                     <td>เลขประจำตัว</td>
-                    <td><input type="text" id="id" placeholder="เลขประจำตัวนิสิต"></td>
+                    <td><input type="text" id="id" placeholder="เลขประจำตัวนิสิต" required></td>
                 </tr>
                 <tr>
                     <td>รหัสผ่าน</td>
-                    <td><input type="password" id="password" placeholder="รหัสผ่าน"></td>
+                    <td><input type="password" id="password" placeholder="รหัสผ่าน" required></td>
                 </tr>
                 <tr>
                     <td></td>
