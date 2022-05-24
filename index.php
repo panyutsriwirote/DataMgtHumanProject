@@ -1,3 +1,13 @@
+<?php
+    session_start();
+    if (isset($_SESSION["login"])) {
+        header("Location: registration_code.php");
+        exit();
+    } elseif (isset($_SESSION["is_admin"])) {
+        header("Location: admin_view.php");
+        exit();
+    }
+?>
 <!DOCTYPE html>
 <html lang="th">
     <head>

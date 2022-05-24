@@ -23,8 +23,6 @@
   $result = $stmt->get_result();
   if (mysqli_num_rows($result) == 0) {
     mysqli_close($link);
-    session_unset();
-    session_destroy();
     echo "0";
     exit();
   }
@@ -55,8 +53,6 @@
       echo "1";
     } else {
       mysqli_close($link);
-      session_unset();
-      session_destroy();
       echo "0";
     }
   }
