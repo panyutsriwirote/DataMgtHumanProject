@@ -222,7 +222,7 @@ $(document).on("enrolled_course_loaded", function() {
             $.post("db_action/delete.php", {course_id: course_id}, function() {
                 $("#refresh").click();
                 const course_info_dom = $("#course_info");
-                if (course_info_dom.length && course_info_dom.html() == course_id + "&nbsp;&nbsp;" + course_name) {
+                if (course_info_dom.length && course_info_dom.html().substr(0, 7) == course_id) {
                     const val = course_id + " " + course_name;
                     submitted = true;
                     prev_term = val;
