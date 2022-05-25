@@ -13,9 +13,12 @@
 				FROM course
 				WHERE course_id = '$course_id'
 				UNION
-				SELECT NULL AS name, group_course_id AS id, course_id, sect_num, NULL AS credit
-				FROM group_course
-				WHERE group_course_id = '$course_id'";
+				SELECT NULL AS name, group_course_id AS id, group_course.course_id, group_course.sect_num, NULL AS credit
+				FROM group_course, section
+				WHERE group_course.course_id = section.course_id
+				AND group_course.sect_num = section.sect_num
+				AND sect_status = 'open'
+				AND group_course_id = '$course_id'";
 	$result = mysqli_query($link, $query);
 	$num_row = mysqli_num_rows($result);
 	if ($num_row == 0) {
