@@ -221,6 +221,14 @@ $(document).on("enrolled_course_loaded", function() {
         if (confirm("ยืนยันการลบรายวิชา\n" + course_id + "  " + course_name)) {
             $.post("db_action/delete.php", {course_id: course_id}, function() {
                 $("#refresh").click();
+                const course_info_dom = $("#course_info");
+                if (course_info_dom.length && course_info_dom.html() == course_id + "&nbsp;&nbsp;" + course_name) {
+                    const val = course_id + " " + course_name;
+                    submitted = true;
+                    prev_term = val;
+                    $("#search").val(val);
+                    $("#course_search").submit();
+                }
             });
         }
     });
