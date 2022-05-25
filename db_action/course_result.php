@@ -39,10 +39,13 @@
             ORDER BY section.sect_num, slot_id";
   $result = mysqli_query($link, $query);
   if (mysqli_num_rows($result) == 0) {
-    $query = "SELECT group_course_id, group_course.course_id, course_en_name, credit, GROUP_CONCAT(sect_num) AS sections
-              FROM group_course, course
+    $query = "SELECT group_course_id, group_course.course_id, course_en_name, credit, GROUP_CONCAT(group_course.sect_num) AS sections
+              FROM group_course, course, section
               WHERE group_course_id = '$course_id'
               AND group_course.course_id = course.course_id
+              AND group_course.course_id = section.course_id
+              AND group_course.sect_num = section.sect_num
+              AND sect_status = 'open'
               GROUP BY group_course.course_id";
     $result = mysqli_query($link, $query);
     if (mysqli_num_rows($result) == 0) {
