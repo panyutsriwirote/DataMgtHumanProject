@@ -39,7 +39,7 @@
 			if (in_array($course["name"], ["THESIS", "DISSERTATION"])) {
 				if (!empty($_POST["enrolled_sect"])) {
 					$credit = $_POST["credit"];
-					$credit_regex = "/^([123456789]\d*(.0|.5)?|0.5)$/";
+					$credit_regex = "/^([123456789]\d*(\.0|\.5)?|0\.5)$/";
 					if (!preg_match($credit_regex, $credit) || intval($credit) > $course["credit"]) {
 						mysqli_close($link);
 						exit();
