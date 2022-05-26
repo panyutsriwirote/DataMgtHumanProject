@@ -21,17 +21,17 @@
 				AND registered < maximum
 				AND group_course_id = '$course_id'";
 	$result = mysqli_query($link, $query);
-	$num_row = mysqli_num_rows($result);
-	if ($num_row == 0) {
+	if (mysqli_num_rows($result) == 0) {
 		mysqli_close($link);
 		exit();
 	}
 	$std_id = $_SESSION["student_id"];
 	$semester_id = $_SESSION["semester_id"];
-	if ($num_row != 1) {
+	$rows = $result->fetch_all(MYSQLI_ASSOC);
+	if (!is_null($rows[0]["course_id"])) {
 		$insert = "INSERT IGNORE INTO registration VALUES ";
 		$values = array();
-		while ($course = mysqli_fetch_array($result)) {
+		foreach ($rows as $course) {
 			array_push($values, "('$std_id', $semester_id, '$course[course_id]', $course[sect_num], NULL)");
 		}
 		$insert = $insert.join(",", $values);
@@ -39,7 +39,7 @@
 		mysqli_close($link);
 	} else {
 		$regex = "/^\d+$/";
-		while ($course = mysqli_fetch_array($result)) {
+		foreach ($rows as $course) {
 			if (in_array($course["name"], ["THESIS", "DISSERTATION"])) {
 				if (!empty($_POST["enrolled_sect"])) {
 					$credit = $_POST["credit"];
