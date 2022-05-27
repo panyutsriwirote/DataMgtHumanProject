@@ -108,6 +108,7 @@
     }
     echo "<p style=text-align:center;>[$total_credit&nbspหน่วยกิต]</p>";
     echo "<p style=text-align:center;><input type=submit value=ลงทะเบียนรายวิชา></p>";
+    echo "</table>";
     echo "</form>";
     mysqli_close($link);
   } else {
