@@ -116,12 +116,14 @@
                   FROM registration
                   WHERE course_id = '$course_id'
                   AND std_id = '$_SESSION[student_id]'
+                  AND semester_id = $_SESSION[semester_id]
                   GROUP BY course_id
                   UNION
                   SELECT GROUP_CONCAT(sect_num) AS sections, selected_credit AS credit
                   FROM registration_t
                   WHERE course_id = '$course_id'
                   AND std_id = '$_SESSION[student_id]'
+                  AND semester_id = $_SESSION[semester_id]
                   GROUP BY course_id
                   LIMIT 1";
     $sect_result = mysqli_query($link, $sect_query);
