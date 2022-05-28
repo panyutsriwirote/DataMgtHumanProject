@@ -143,7 +143,7 @@ $(document).on("form_loaded", function() {
             return;
         }
         const credit = (credit_dom.length) ? credit_dom.val() : null;
-        if (credit == "") {
+        if (credit == "" && num_enrolled_sect != 0) {
             alert("กรุณาระบุจำนวนหน่วยกิต");
             return;
         }
