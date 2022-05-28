@@ -45,7 +45,7 @@
               AND group_course.course_id = course.course_id
               AND group_course.course_id = section.course_id
               AND group_course.sect_num = section.sect_num
-              AND sect_status = 'open'
+              AND sect_status = 1
               AND registered < maximum
               GROUP BY group_course.course_id";
     $result = mysqli_query($link, $query);
@@ -193,7 +193,7 @@
       if ($cur_sect != $sect_num) {
         $class = switch_class($class);
         echo "<tr class=$class>";
-        if ($row["sect_status"] == "close") {
+        if ($row["sect_status"] == 0) {
           echo "<td valign=TOP>-</td>";
           echo "<td valign=TOP><span style=color:red>ปิด</span></td>";
         } elseif ($row["registered"] >= $row["maximum"]) {
