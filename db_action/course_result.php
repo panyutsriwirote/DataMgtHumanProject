@@ -147,12 +147,15 @@
     $course_en_name = $first_row["course_en_name"];
     $course_th_name = $first_row["course_th_name"];
     $course_credit = $first_row["credit"];
+    $mid_term = $first_row["mid_term"];
+    $final = $first_row["final"];
     if (is_null($course_credit)) {
       $course_credit = "-";
     }
     echo "<form id=enroll_form>";
     echo "<p id=course_info style=text-align:center;>$id&nbsp&nbsp$course_en_name</p>";
     echo "<p style=text-align:center;>$course_th_name&nbsp&nbsp[$course_credit&nbspหน่วยกิต]</p>";
+    echo "<p style=text-align:center;>กลางภาค: $mid_term<br>ปลายภาค: $final</p>";
     $button_text = (count($enrolled_sect) == 0) ? "ลงทะเบียนรายวิชา" : "ยืนยันการแก้ไข";
     echo "<p style=text-align:center;><input id=submit_form type=submit value=$button_text></p>";
     if (in_array($course_en_name, ["THESIS", "DISSERTATION"])) {
